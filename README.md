@@ -1,3 +1,5 @@
+[中文](https://github.com/leolee9086/themeEditor/blob/main/README——zh_CN.md)
+
 ## Installation:
 
 Install through the marketplace or install through a compressed package.

@@ -1,7 +1,7 @@
 {
   "name": "themeEditor",
   "author": "椽承设计",
-  "url": "https://afdian.net/a/leolee9086",
+  "url": "https://github.com/leolee9086/themeEditor",
   "version": "0.0.1",
   "displayName": {
     "default": "themeEditor",
@@ -12,7 +12,7 @@
     "zh_CN": "这是一个用于编辑或者创建主题的插件"
   },
   "readme": {
-    "default": "README.md",
+    "default": "README_zh_CN.md",
     "zh_CN": "README_zh_CN.md"
   },
   "i18n": [
