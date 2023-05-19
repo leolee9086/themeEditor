@@ -1,3 +1,5 @@
+[English](https://github.com/leolee9086/themeEditor/blob/main/README.md)
+
 # themeEditor使用方法
 
 ## 安装：
