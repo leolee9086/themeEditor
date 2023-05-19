@@ -1,4 +1,4 @@
-[English](https://github.com/leolee9086/themeEditor/blob/main/README.md)
+[English](https://github.com/leolee9086/themeEditor/README.md)
 
 # themeEditor使用方法
 

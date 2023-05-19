@@ -1,4 +1,4 @@
-[中文](https://github.com/leolee9086/themeEditor/blob/main/README_zh_CN.md)
+[中文](https://github.com/leolee9086/themeEditor/README_zh_CN.md)
 
 ## Installation:
 
