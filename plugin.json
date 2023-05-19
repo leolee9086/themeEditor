@@ -1,0 +1,27 @@
+{
+  "name": "themeEditor",
+  "author": "椽承设计",
+  "url": "https://afdian.net/a/leolee9086",
+  "version": "0.0.1",
+  "displayName": {
+    "default": "themeEditor",
+    "zh_CN": "themeEditor"
+  },
+  "description": {
+    "default": "this is a plugin to modify or creat theme",
+    "zh_CN": "这是一个用于编辑或者创建主题的插件"
+  },
+  "readme": {
+    "default": "README.md",
+    "zh_CN": "README_zh_CN.md"
+  },
+  "i18n": [
+    "en_US",
+    "zh_CN"
+  ],
+  "funding": {
+    "custom": [
+      "https://afdian.net/a/leolee9086"
+    ]
+  }
+}
