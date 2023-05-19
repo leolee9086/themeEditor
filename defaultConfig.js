@@ -1,32 +1,13 @@
 export default [
   {
     name: "background-color",
-    //type: "color",
+    type: "color",
     label: "二级标题颜色",
     memo: "",
     group: "编辑器",
     subGroup:"标题",
     selector:" div.protyle-wysiwyg.protyle-wysiwyg--attr > div.h2",
-    render:(options)=>{
-      let element = document.createElement('input')
-      return element
-    }
-  },
-  {
-    name: "--b3-theme-primary11",
-    type: "select",
-    label: "测试",
-    memo: "",
-    options: ["ceshi", { label: "emoji", value: "1111" }],
-    multiple: true,
-    group: "主要",
-  },
-  {
-    name: "--b3-theme-primary12",
-    type: "number",
-    label: "测试",
-    memo: "",
-    options: ["ceshi", { label: "emoji", value: "1111" }],
+ 
   },
   {
     name: "--b3-theme-primary",
