@@ -198,7 +198,7 @@ export default {
     ```
   * 渲染为：
 
-    * ​![image](assets/image-20230519162400-0alp2l7.png)​
+    * ​![image](./assets/image-20230519162400-0alp2l7.png)​
   * 如果使用渲染函数，需要保证：
 
     * 1. 返回值为一个DOM元素

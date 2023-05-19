@@ -13,7 +13,9 @@
   },
   "readme": {
     "default": "README_zh_CN.md",
-    "en_US": "README_zh_CN.md"
+    "en_US": "README_zh_CN.md",
+    "zh_CN": "README.md"
+
   },
   "i18n": [
     "en_US",
