@@ -2,7 +2,7 @@
   "name": "themeEditor",
   "author": "椽承设计",
   "url": "https://github.com/leolee9086/themeEditor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "displayName": {
     "default": "themeEditor",
     "zh_CN": "themeEditor"
@@ -13,9 +13,8 @@
   },
   "readme": {
     "default": "README_zh_CN.md",
-    "en_US": "README_zh_CN.md",
+    "en_US": "README_en_US.md",
     "zh_CN": "README.md"
-
   },
   "i18n": [
     "en_US",
