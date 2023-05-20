@@ -1,19 +1,20 @@
 export default [
   {
-    name: "background-color",
-    type: "color",
+    name: "background",
+    //type: "color",
     label: "二级标题颜色",
     memo: "",
     group: "编辑器",
     subGroup:"标题",
     selector:" div.protyle-wysiwyg.protyle-wysiwyg--attr > div.h2",
- 
+    
   },
   {
     name: "--b3-theme-primary",
     type: "color",
     label: "主色",
     memo: "",
+    as:"color"
   },
   {
     name: "--b3-theme-primary-light",

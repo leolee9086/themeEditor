@@ -80,11 +80,21 @@ class themeEditor extends Plugin {
         </div>
         <div class="block__icons hiddenable" style="max-height:42px;overflow:hidden">
           主题配置文件:
+          <span 
+          class="block__logo cc_add b3-tooltips b3-tooltips__e" aria-label="创建一个针对当前主题的代码片段,左键添加/更新,右键删除\n在你要关掉这个插件的时候使用"
+          data-custom-action="addThemeProducts"
+          style='border-radius:3px'
+          >
+          <svg><use xlink:href="#iconCode"></use></svg>
+  
+          </span>
+  
           <select class="b3-select fn__flex-center fn__size100 configFileTheme">
           </select>
           <span class='fn__flex-1'> </span>
 
           主题配置产品:
+
           <select class="b3-select fn__flex-center fn__size100 puductTheme">
           <option value=0>临时</option>
           </select>
@@ -95,10 +105,20 @@ class themeEditor extends Plugin {
         <svg><use xlink:href="#iconDownload"></use></svg>
 
         </span>
-
+        </span>
+        
         </div>
         <div class="block__icons hiddenable" style="max-height:42px;overflow:hidden">
         公共配置文件:
+        <span 
+        class="block__logo cc_add b3-tooltips b3-tooltips__e" aria-label="创建一个公共代码片段,左键添加/更新,右键删除\n在你要关掉这个插件的时候使用"
+        data-custom-action="addCommonProducts" 
+        style='border-radius:3px'
+
+        >
+        <svg><use xlink:href="#iconCode"></use></svg>
+
+        </span>
         <select class="b3-select fn__flex-center fn__size100 configFileCommon">
         </select>
         <span class="block__logo" data-custom-action="upLoadConfigs">
@@ -126,7 +146,7 @@ class themeEditor extends Plugin {
         <svg><use xlink:href="#iconDownload"></use></svg>
 
         </span>
-
+       
 
         </div>
         <div class="block__icons " style="max-height:42px;overflow:hidden">
@@ -224,6 +244,7 @@ class themeEditor extends Plugin {
     //await importDep("./polyfills/genKernelApi.js");
     核心api = (await importDep("./polyfills/kernelApi.js"))["default"];
     思源工作空间 = (await importDep("./polyfills/fs.js"))["default"];
+   
   }
   async 初始化数据() {
     this.data = {};
@@ -238,7 +259,7 @@ class themeEditor extends Plugin {
     if (
       await 思源工作空间.exists(path.join(this.dataPath, "lastValues.json"))
     ) {
-     // console.log(this.lastValues);
+      // console.log(this.lastValues);
       this.lastValues = await 思源工作空间.readFile(
         path.join(this.dataPath, "lastValues.json")
       );
@@ -355,7 +376,7 @@ class themeEditor extends Plugin {
       this.lastValues.commonCustomCss =
         commonCustomCss || this.lastValues.commonCustomCss;
     }
-   // console.log(this.lastValues);
+    // console.log(this.lastValues);
   }
   async 获取当前主题配置文件路径(主题配置序号) {
     if (!主题配置序号) {
@@ -419,22 +440,98 @@ class themeEditor extends Plugin {
     await this.绑定搜索过滤();
     await this.绑定刷新();
     await this.绑定保存();
-    await this.绑定编辑区显示()
+    await this.绑定代码片段();
+
+    await this.绑定编辑区显示();
   }
-  绑定编辑区显示(){
-    let hiddened
-    this.dock面板元素.querySelector('.hidder').onclick=()=>{
-      hiddened=!hiddened
-      this.dock面板元素.querySelectorAll('.hiddenable').forEach(
+  获取标记字符串(action) {
+    if (action == "addThemeProducts") {
+      let 标记字符串 = btoa(
+        toBinary(this.lastValues.lastThemeConfigFilePath)
+      ).substring(0, 16);
+      let 当前主题名 = 获取当前主题文件夹URL().split("/").pop();
+      标记字符串 =
+        标记字符串 +
+        "," +
+        `${当前主题名}下${this.lastValues.lastThemeConfigFileName}配置产物`;
+      return 标记字符串;
+    } else {
+      let 标记字符串 = btoa(
+        toBinary(this.lastValues.lastCommonfigFilePath)
+      ).substring(0, 16);
+      标记字符串 =
+        标记字符串 +
+        "," +
+        `${this.lastValues.lastCommonfigFileName}配置产物`;
+      return 标记字符串;
+    }
+  }
+  async 绑定代码片段() {
+    this.dock面板元素.querySelectorAll(".cc_add").forEach(async (el) => {
+      let action = el.dataset.customAction;
+      let 标记字符串 = this.获取标记字符串(action);
+      document.querySelectorAll(`#${标记字符串}`).forEach(
         el=>{
-            el.style.display=hiddened?"none":""
-          
+          el.dataset.provider = (action=="addThemeProducts")?'theme':'common'
         }
       )
-      this.dock面板元素.querySelector('.config__tab-container').style.maxHeight=
-      hiddened?"calc(100% - 84px)":"calc(100% - 210px)"
-      
-
+      let 现有代码片段 = await 核心api.getSnippet({ type: "all", enabled: 2 });
+      let 存在元素索引 = 现有代码片段.snippets.findIndex((item) =>
+        item.content.startsWith(`/*${标记字符串}*/`)
+      );
+      if(存在元素索引>=0){
+        el.enabled = 1;
+        el.style.backgroundColor='var(--b3-theme-primary-light)'
+      }else{
+        el.enabled = 0;
+        el.style.backgroundColor=''
+      }
+      el.oncontextmenu=(e)=>{
+        if(e.currentTarget.enabled){
+          let _action = e.currentTarget.dataset.customAction;
+          let 标记字符串 = this.获取标记字符串(_action);
+  
+          移除代码片段(标记字符串)
+          return
+        }
+      }
+      el.onclick = (e) => {
+        let _action = e.currentTarget.dataset.customAction;
+        let 标记字符串 = this.获取标记字符串(_action);
+       
+        if (action == "addThemeProducts") {
+          生成css代码片段(
+            标记字符串,
+            this.lastValues.themesCustomCss,
+            "theme",
+            this.lastValues.themeProductName
+          );
+          e.currentTarget.enabled = 1;
+          e.currentTarget.style.backgroundColor='var(--b3-theme-primary-light)'
+  
+        } else {
+          生成css代码片段(
+            标记字符串,
+            this.lastValues.commonCustomCss,
+            "common",
+            this.lastValues.commonProductName
+          );
+          e.currentTarget.enabled = 1;
+          e.currentTarget.style.backgroundColor='var(--b3-theme-primary-light)'
+        }
+      };
+    });
+  }
+  绑定编辑区显示() {
+    let hiddened;
+    this.dock面板元素.querySelector(".hidder").onclick = () => {
+      hiddened = !hiddened;
+      this.dock面板元素.querySelectorAll(".hiddenable").forEach((el) => {
+        el.style.display = hiddened ? "none" : "";
+      });
+      this.dock面板元素.querySelector(
+        ".config__tab-container"
+      ).style.maxHeight = hiddened ? "calc(100% - 84px)" : "calc(100% - 210px)";
     };
   }
   绑定真实过滤开关() {
@@ -445,7 +542,6 @@ class themeEditor extends Plugin {
       真实过滤 = 开关.checked ? true : false;
 
       this.生成css();
-
     };
   }
   初始化设置css() {
@@ -489,6 +585,7 @@ class themeEditor extends Plugin {
               accept: {
                 "application/javascript": [".js"],
                 "application/json": [".json"],
+                "text/css": [".css"],
               },
             },
           ],
@@ -622,10 +719,9 @@ class themeEditor extends Plugin {
     }
     if (fileName && content && mime) {
       核心api.pushMsg({
-        msg:"稍等，下载马上开始",
-        timeout:1000
-
-      })
+        msg: "稍等，下载马上开始",
+        timeout: 1000,
+      });
       let file = new File([content], fileName, { type: mime });
       let moduleURL = URL.createObjectURL(file);
       let a = document.createElement("a");
@@ -635,11 +731,11 @@ class themeEditor extends Plugin {
       });
       a.click();
       a.remove();
-    }else{
+    } else {
       核心api.pushErrMsg({
-        msg:"文件内容是空的，不能下载",
-        timeout:1000
-      })
+        msg: "文件内容是空的，不能下载",
+        timeout: 1000,
+      });
     }
   }
   绑定搜索过滤() {
@@ -802,7 +898,6 @@ class themeEditor extends Plugin {
       this.过滤显示({ key: "group", value: selector.value });
       this.绑定次级分组过滤();
       真实过滤 ? this.生成css() : null;
-
     };
     selector.addEventListener("change", searchCurrent);
     searchCurrent();
@@ -844,7 +939,6 @@ class themeEditor extends Plugin {
     let searchCurrent = () => {
       this.过滤显示({ key: "subGroup", value: selector.value });
       真实过滤 ? this.生成css() : null;
-
     };
     selector.addEventListener("change", searchCurrent);
     searchCurrent();
@@ -853,18 +947,23 @@ class themeEditor extends Plugin {
     let selector = this.dock面板元素.querySelector(".b3-filter-selectortext");
 
     this.selectors.forEach((selectorText) => {
-      if (selector.querySelector(`[value="${selectorText}"]`)) {
+      if (selector.querySelector(`[value="${Lute.EscapeHTMLStr(
+        selectorText
+      )}"]`)) {
         return;
       }
-      selector.innerHTML += `<option value="${selectorText}">${Lute.EscapeHTMLStr(
+      selector.innerHTML += `<option value="${Lute.EscapeHTMLStr(
+        selectorText
+      )}">${Lute.EscapeHTMLStr(
         selectorText
       )}</option>`;
     });
     let searchCurrent = () => {
-      this.过滤显示({ key: "selectortext", value: selector.value });
+      this.过滤显示({ key: "selectortext", value: Lute.EscapeHTMLStr(
+        selector.value
+      ) });
 
       真实过滤 ? this.生成css() : null;
-
     };
     selector.addEventListener("change", searchCurrent);
     searchCurrent();
@@ -933,71 +1032,80 @@ class themeEditor extends Plugin {
     this.生成设置条目(this.当前通用配置内容, "common");
   }
   生成css() {
-    this.lastValues.commonCustomCss = 计算css(this.当前通用配置内容, "common");
-    this.lastValues.themesCustomCss = 计算css(this.当前主题配置内容, "theme");
+    this.lastValues.commonCustomCss = 计算css.bind(this)(
+      this.当前通用配置内容,
+      "common"
+    );
+    this.lastValues.themesCustomCss = 计算css.bind(this)(
+      this.当前主题配置内容,
+      "theme"
+    );
   }
   生成设置条目(设置内容, 设置类型) {
     (this.groups = []), (this.subGroups = []);
 
     设置内容.forEach((item) => {
-      try{
-      let formItem = new FormItem(
-        item,
-        this.dock面板元素.querySelector(".config__tab-container"),
-        () => {
-          this.生成css();
-          /*if (设置类型 == "common") {
+      try {
+        let formItem = new FormItem(
+          item,
+          this.dock面板元素.querySelector(".config__tab-container"),
+          () => {
+            this.生成css();
+            /*if (设置类型 == "common") {
             this.lastValues.commonCustomCss = 计算css(设置内容, 设置类型);
           } else {
             this.lastValues.themesCustomCss = 计算css(设置内容, 设置类型);
           }*/
-        },
-        () => {
-          let el = document.getElementById("themeEditorColorPlate");
-          el ? el.remove() : null;
+          },
+          () => {
+            let el = document.getElementById("themeEditorColorPlate");
+            el ? el.remove() : null;
+          }
+        );
+        Object.defineProperty(item, "filted", {
+          get: () => {
+            return (
+              formItem.element.style.display !== "none" &&
+              !formItem.element.classList.contains("fn__none")
+            );
+          },
+        });
+        formItem.element.setAttribute("data-config", 设置类型);
+        formItem.element.setAttribute("data-group", item.group || "基础设置");
+        item.group ? this.groups.push(item.group) : null;
+        formItem.element.setAttribute(
+          "data-sub-group",
+          item.subGroup || "基础"
+        );
+        item.subGroup ? this.subGroups.push(item.subGroup) : null;
+        formItem.element.setAttribute(
+          "data-selectortext",
+          Lute.EscapeHTMLStr(item.selector) || ":root"
+        );
+        item.selector && item.selector !== ":root"
+          ? this.selectors.push(item.selector)
+          : null;
+        if (item.selector) {
+          this.selectors.push(item.selector);
+          let div = formItem.element.querySelector(".fn__flex-1");
+          div.innerHTML += `<span class='selector-text' style="font-size:12px;border-top:1px solid var(--b3-theme-surface-lighter)">选择器:${Lute.EscapeHTMLStr(
+            item.selector
+          )}</span>`;
+          div
+            .querySelector(".selector-text")
+            .addEventListener("mouseover", (e) => {
+              testselector(Lute.UnEscapeHTMLStr(item.selector));
+              e.stopPropagation();
+            });
         }
-      );
-      Object.defineProperty(item, "filted", {
-        get: () => {
-          return (
-            formItem.element.style.display !== "none" &&
-            !formItem.element.classList.contains("fn__none")
-          );
-        },
-      });
-      formItem.element.setAttribute("data-config", 设置类型);
-      formItem.element.setAttribute("data-group", item.group || "基础设置");
-      item.group ? this.groups.push(item.group) : null;
-      formItem.element.setAttribute("data-sub-group", item.subGroup || "基础");
-      item.subGroup ? this.subGroups.push(item.subGroup) : null;
-      formItem.element.setAttribute(
-        "data-selectortext",
-        item.selector || ":root"
-      );
-      item.selector && item.selector !== ":root"
-        ? this.selectors.push(item.selector)
-        : null;
-      if (item.selector) {
-        this.selectors.push(item.selector);
-        let div = formItem.element.querySelector(".fn__flex-1");
-        div.innerHTML += `<span class='selector-text' style="font-size:12px;border-top:1px solid var(--b3-theme-surface-lighter)">选择器:${Lute.EscapeHTMLStr(
-          item.selector
-        )}</span>`;
-        div
-          .querySelector(".selector-text")
-          .addEventListener("mouseover", (e) => {
-            testselector(item.selector);
-            e.stopPropagation();
-          });
+        this.groups = Array.from(new Set(this.groups));
+        this.subGroups = Array.from(new Set(this.subGroups));
+        this.selectors = Array.from(new Set(this.selectors));
+        //console.log(this);
+        this.formItems.push(formItem);
+      } catch (e) {
+        consoleError(`配置界面生成失败：${e}`);
       }
-      this.groups = Array.from(new Set(this.groups));
-      this.subGroups = Array.from(new Set(this.subGroups));
-      this.selectors = Array.from(new Set(this.selectors));
-      //console.log(this);
-      this.formItems.push(formItem);
-    }catch(e){
-      consoleError(`配置界面生成失败：${e}`)
-    }
     });
   }
 
@@ -1085,9 +1193,14 @@ function 计算css(配置内容, 设置类型) {
   let 选择器字典 = {
     ":root": [],
   };
+  let 导入列表 = [];
   let css = "";
   配置内容.forEach((item) => {
     if (!item.filted && 真实过滤) {
+      return;
+    }
+    if (item.subtype == "@import") {
+      item.value ? 导入列表.push(item.target || item.name) : null;
       return;
     }
     if (!item.selector) {
@@ -1112,12 +1225,49 @@ function 计算css(配置内容, 设置类型) {
     batchSetAttribute(themeEditorStyle, {
       id: `themeEditorStyle-${设置类型}`,
       class: "themeEditorStyle",
-      "data-provider": 设置类型,
     });
     document.head.appendChild(themeEditorStyle);
   }
-  themeEditorStyle.textContent = css;
+  let 导入css = "";
+
+  if (导入列表[0]) {
+    导入列表.forEach((item) => {
+      let base =
+        设置类型 == "theme"
+          ? this.lastValues.lastThemeConfigFilePath
+          : this.lastValues.lastCommonfigFilePath;
+      let url = item;
+      base ? (url = resolveRelativePath(base, item)) : null;
+      url = workspacePathToURL(url);
+      导入css += `@import url("${url}");\n`;
+    });
+  }
+  css = 导入css + css;
+  document.querySelectorAll(`[data-provider="${设置类型}"]`).forEach(el=>{
+    el.textContent = css;
+  })
   return css;
+}
+function workspacePathToURL(url) {
+  if (url.startsWith("/data")) {
+    return url.replace("/data", "");
+  } else if (url.startsWith("/conf/appearance")) {
+    return url.replace("/conf", "");
+  }
+}
+function resolveRelativePath(file, path) {
+  if (path.startsWith("/")) return path;
+  if (path.match(/^http/)) return path;
+  if (path.match(/^file/)) return path;
+  if (!file) return path;
+  const basePath = file.substring(0, file.lastIndexOf("/"));
+  if (path.startsWith("../")) {
+    return resolveRelativePath(basePath, path.substring(3));
+  } else if (path.startsWith("./")) {
+    path = path.substring(2);
+  }
+
+  return basePath + "/" + path;
 }
 function 生成选择器css(配置内容, 选择器) {
   if (!选择器) {
@@ -1127,7 +1277,7 @@ function 生成选择器css(配置内容, 选择器) {
     `;
   配置内容.forEach((item) => {
     if (item.memo) {
-      css += `\n\\*${item.memo}*\\`;
+      css += `\n/*${item.memo}*/`;
     }
     css += `\n${item.name}:${item.value || item.default};`;
   });
@@ -1152,7 +1302,7 @@ function 获取当前主题元数据路径() {
 }
 
 async function 获取配置文件内容(配置文件路径) {
- // console.log(配置文件路径);
+  // console.log(配置文件路径);
   let array = objectToArray(await 读取json配置(配置文件路径));
   return array
     .filter((item) => {
@@ -1192,6 +1342,10 @@ async function 读取json配置(配置文件路径) {
       consoleError(`themeEditor:读取配置(${配置文件路径})失败：\n`, e);
       return [];
     }
+  } else if (extension == "css") {
+    let cssContent = await 思源工作空间.readFile(配置文件路径);
+
+    return cssToJson(cssContent);
   }
 }
 
@@ -1257,7 +1411,7 @@ class FormIpputer {
           value: options.value || options.default,
         });
         element.addEventListener("change", () => {
-          options.value = element.value;
+          options.value = element.checked;
           this.formItem.cb.bind(this.formItem)(options);
         });
         break;
@@ -1284,8 +1438,8 @@ class FormIpputer {
           class: "b3-slider ",
           value: options.value || options.default || 0,
           style: "box-sizing: border-box",
-          max: options.max||100,
-          min: options.min||1,
+          max: options.max || 100,
+          min: options.min || 1,
           type: "range",
         });
         element.querySelector("input").addEventListener("mousemove", () => {
@@ -1385,12 +1539,20 @@ class FormIpputer {
 
         pickr.on("change", async (color, source, instance) => {
           options.value = color.toRGBA().toString();
+          element.value = options.value;
+          const event = new Event("change", {
+            bubbles: true,
+            cancelable: false,
+          });
+
+          element.dispatchEvent(event);
           this.formItem.cb.bind(this.formItem)(options);
         });
+
         break;
       default:
         if (options.render) {
-          element = options.render(options,this.formItem);
+          element = options.render(options, this.formItem);
           element.addEventListener("change", () => {
             options.value = element.value;
             this.formItem.cb.bind(this.formItem)(options);
@@ -1416,8 +1578,43 @@ class FormIpputer {
       batchSetAttribute(element, {
         style: "max-width:100% !important;width:100%;min-width:100%",
       });
+
       this.formItem.element.innerHTML += '<div class="fn__hr"></div>';
     }
+    if (!options.subtype == "@import") {
+      element.addEventListener("change", () => {
+        try {
+          let name = options.name;
+          if (options.as) {
+            //console.log(options.as);
+            name = options.as;
+          }
+          CSSStyleValue.parse(name, element.value);
+          this.formItem.element.style.backgroundColor = "";
+          this.formItem.element
+            .querySelectorAll(".item-error-container")
+            .forEach((el) => {
+              el.remove();
+            });
+        } catch (e) {
+          this.formItem.element.style.backgroundColor =
+            "var(--b3-card-error-background)";
+          if (!this.formItem.element.querySelector(".item-error-container")) {
+            this.formItem.element
+              .querySelector(".b3-label__text")
+              .insertAdjacentHTML(
+                "beforeend",
+                `<div class="item-error-container">${e}</div>`
+              );
+          } else {
+            this.formItem.element.querySelector(
+              ".item-error-container"
+            ).innerText = e;
+          }
+        }
+      });
+    }
+
     return element;
   }
 }
@@ -1457,7 +1654,7 @@ function 合并主题配置(原始主题配置, 配置类型) {
   });
   原始主题配置.forEach((item) => {
     if (item.default && item.ruler) {
-      item.default = item.default.trim();
+      item.default = (item.default+'').trim();
       if (item.default.startsWith("var")) {
         item.value = item.ruler.style.getPropertyValue(
           item.default.replace("var", "").replace("(", "").replace(")", "")
@@ -1494,6 +1691,9 @@ function 合并主题配置(原始主题配置, 配置类型) {
   });
 }
 function testselector(selector) {
+  if (selector === ":root") {
+    return;
+  }
   let tempstyle = window.document.createElement("style");
   tempstyle.innerHTML =
     selector + "{border:dashed 2px blue;background-color:yellow}";
@@ -1561,4 +1761,359 @@ function toBinary(string) {
     result += String.fromCharCode(charCodes[i]);
   }
   return result;
+}
+function cssToJson(cssText) {
+  let array = [];
+  let styleEl = document.createElement("style");
+  let iframe = document.createElement("iframe");
+  iframe.style.display = "none";
+  batchSetAttribute(iframe, {
+    href: "about:blank",
+  });
+  document.body.appendChild(iframe);
+  iframe.contentDocument.head.appendChild(styleEl);
+  styleEl.textContent = cssText;
+  Array.from(styleEl.sheet.cssRules).forEach((rule) => {
+    //    console.log(rule);
+    if (rule.style) {
+      Array.from(rule.style).forEach(
+        (
+          styleName //jsonRuler[styleName]=rule.style.getPropertyValue(styleName)
+        ) => {
+          let _value = rule.styleMap.get(styleName);
+          try {
+            CSSStyleValue.parse(
+              styleName,
+              rule.style.getPropertyValue(styleName)
+            );
+          } catch (e) {
+            array.push({
+              name: styleName,
+              default: _value.value,
+              label: styleName,
+              selector: rule.selectorText,
+              memo:  _value.value + "不是" + styleName + "的合法值:" + e,
+            });
+          }
+          switch (_value.constructor.name) {
+            case "CSSUnitValue":
+              array.push({
+                name: styleName,
+                default: _value.value,
+                unit: _value.unit,
+                type: "number",
+                label: styleName,
+                selector: rule.selectorText,
+                memo: "",
+              });
+              break;
+            case "CSSStyleValue":
+              if (isColor(_value.toString())) {
+                array.push({
+                  name: styleName,
+                  default: _value.value,
+                  type: "color",
+                  label: styleName,
+                  selector: rule.selectorText,
+                  memo: "",
+                });
+              }
+              break;
+            case "CSSUnparsedValue":
+              if (!isColor(_value.toString().trim())) {
+               // console.log(_value.length, _value.toString().trim());
+              }
+              if (isColor(_value.toString().trim())) {
+                array.push({
+                  name: styleName,
+                  default: _value[0].trim(),
+                  type: "color",
+                  label: styleName,
+                  selector: rule.selectorText,
+                  memo: "",
+                });
+              } else if (isVarUse(_value.toString().trim())) {
+                let rulerObj = {};
+                rulerObj = {
+                  name: styleName,
+                  default: _value.toString().trim(),
+                  use: _value.toString().trim(),
+                  label: styleName,
+                  selector: rule.selectorText,
+                  memo: "",
+                };
+                let rootFined = array.find((item) => {
+                  return (
+                    `var(${item.name})` == _value.toString().trim() &&
+                    item.selector == rule.selectorText
+                  );
+                });
+                let blockFined = array.find((item) => {
+                  return `var(${item.name})` == _value.toString().trim();
+                });
+                rootFined = blockFined ? rootFined : null;
+                if (blockFined) {
+                  rulerObj.default = blockFined.default;
+                }
+                array.push(rulerObj);
+              } else {
+               // console.log(styleName, _value, _value.toString());
+                array.push({
+                  name: styleName,
+                  default: _value.toString(),
+                  label: styleName,
+                  selector: rule.selectorText,
+                  memo: "",
+                });
+              }
+              break;
+            case "CSSKeywordValue":
+              //console.log(styleName, _value, _value.toString());
+              array.push({
+                name: styleName,
+                default: _value.toString(),
+                label: styleName,
+                selector: rule.selectorText,
+                memo: "",
+              });
+              break;
+            default:
+             // console.log(styleName, _value, _value.toString());
+              array.push({
+                name: styleName,
+                default: _value.toString(),
+                label: styleName,
+                selector: rule.selectorText,
+                memo: "",
+              });
+              break;
+          }
+        }
+      );
+    } else if (rule instanceof CSSImportRule) {
+      array.push({
+        type: "boolean",
+        name: rule.href,
+        subtype: "@import",
+        label: rule.href,
+        memo: "",
+      });
+    } else {
+      console.log(rule);
+    }
+  });
+  iframe.remove();
+  return array;
+}
+function isColor(value) {
+  let namedColors = new Set([
+    "aliceblue",
+    "antiquewhite",
+    "aqua",
+    "aquamarine",
+    "azure",
+    "beige",
+    "bisque",
+    "black",
+    "blanchedalmond",
+    "blue",
+    "blueviolet",
+    "brown",
+    "burlywood",
+    "cadetblue",
+    "chartreuse",
+    "chocolate",
+    "coral",
+    "cornflowerblue",
+    "cornsilk",
+    "crimson",
+    "cyan",
+    "darkblue",
+    "darkcyan",
+    "darkgoldenrod",
+    "darkgray",
+    "darkgreen",
+    "darkgrey",
+    "darkkhaki",
+    "darkmagenta",
+    "darkolivegreen",
+    "darkorange",
+    "darkorchid",
+    "darkred",
+    "darksalmon",
+    "darkseagreen",
+    "darkslateblue",
+    "darkslategray",
+    "darkslategrey",
+    "darkturquoise",
+    "darkviolet",
+    "deeppink",
+    "deepskyblue",
+    "dimgray",
+    "dimgrey",
+    "dodgerblue",
+    "firebrick",
+    "floralwhite",
+    "forestgreen",
+    "fuchsia",
+    "gainsboro",
+    "ghostwhite",
+  ]);
+  try {
+    CSSStyleValue.parse("color", value);
+    return "color";
+  } catch (e) {}
+  if (
+    value.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/) ||
+    value.match(
+      /^rgb\s*\(\s*[0-9]{1,3}\s*,\s*[0-9]{1,3}\s*,\s*[0-9]{1,3}\s*\)$/
+    ) ||
+    value.match(
+      /^rgba\s*\(\s*[0-9]{1,3}\s*,\s*[0-9]{1,3}\s*,\s*[0-9]{1,3}\s*,\s*([01]{1}|[0-9]{1,2}\.[0-9]{1,2}|100)\s*\)$/
+    ) ||
+    value.match(
+      /^hsl\s*\(\s*[0-9]{1,3}\s*,\s*[0-9]{1,3}%\s*,\s*[0-9]{1,3}%\s*\)$/
+    ) ||
+    value.match(
+      /^hsla\s*\(\s*[0-9]{1,3}\s*,\s*[0-9]{1,3}%\s*,\s*[0-9]{1,3}%\s*,\s*([01]{1}|[0-9]{1,2}\.[0-9]{1,2}|100)\s*\)$/
+    ) ||
+    namedColors.has(value.toLowerCase())
+  ) {
+    return "color";
+  } else if (value.startsWith("#")) {
+    try {
+      CSSStyleValue.parse("color", value);
+      return "color";
+    } catch (e) {}
+  }
+}
+function isVarUse(value) {
+  return value.match(/^var\((--[\w-]+)\)/);
+}
+
+function getUnit(value) {
+  if (value === 0) return "";
+  const units = [
+    "px",
+    "rem",
+    "em",
+    "vw",
+    "vh",
+    "%",
+    "cm",
+    "mm",
+    "in",
+    "pt",
+    "pc",
+    "ex",
+    "ch",
+  ];
+  for (let i = 0; i < units.length; i++) {
+    if (String(value).endsWith(units[i])) {
+      return units[i];
+    }
+  }
+  return "";
+}
+async function 移除代码片段(标记字符串) {
+  let 现有代码片段 = await 核心api.getSnippet({ type: "all", enabled: 2 });
+  let 存在元素索引 = 现有代码片段.snippets.findIndex((item) =>
+    item.content.startsWith(`/*${标记字符串}*/`)
+  );
+  if (存在元素索引 >= 0) {
+    现有代码片段.snippets.splice(存在元素索引, 1);
+    await 核心api.setSnippet(现有代码片段);
+    window.location.reload();
+  }
+}
+async function 生成css代码片段(标记字符串, css内容, 类型, 名称) {
+  let 现有代码片段 = await 核心api.getSnippet({ type: "all", enabled: 2 });
+  let id = Lute.NewNodeID() + "themeEditor";
+  let 存在元素索引 = 现有代码片段.snippets.findIndex((item) =>
+    item.content.startsWith(`/*${标记字符串}*/`)
+  );
+  let 判断主题函数内容 = `if(获取当前主题文件夹URL()==\`${获取当前主题文件夹URL()}\`)`;
+  类型 == "common" ? (判断主题函数内容 = "if(true)") : null;
+  let 代码片段内容 = `/*${标记字符串}*/
+    ${生成元素.toString()}
+    ${获取当前主题文件夹URL.toString()}
+
+    ${判断主题函数内容}{
+      
+    
+    document.head.appendChild(
+      生成元素(
+        "style",
+        {
+          id: \`${Lute.EscapeHTMLStr(标记字符串)}\`,
+          "data-provider":'${类型}'
+        },
+        \`${css内容}\`
+      )
+    )
+      }
+  `;
+  if (存在元素索引 >= 0) {
+    // 如果元素已存在，则替换元素value
+    现有代码片段.snippets[存在元素索引].content =
+      `/*${标记字符串}*/\n` + 代码片段内容;
+    现有代码片段.snippets[存在元素索引].name = 名称;
+    id = 现有代码片段.snippets[存在元素索引].id;
+    if (现有代码片段.snippets[存在元素索引].enabled) {
+      await 核心api.setSnippet(现有代码片段);
+      window.location.reload();
+    } else {
+      现有代码片段.snippets[存在元素索引].enabled = true;
+      await 核心api.setSnippet(现有代码片段);
+      document.head.appendChild(
+        生成元素(
+          "script",
+          {
+            id: `snippetJS${id}`,
+            type: "text/javascript",
+          },
+          代码片段内容
+        )
+      );
+    }
+  } else {
+    // 否则添加新元素
+    现有代码片段.snippets.push({
+      id: id,
+      content: 代码片段内容,
+      name: 名称,
+      type: "js",
+      enabled: true,
+    });
+    await 核心api.setSnippet(现有代码片段);
+    document.head.appendChild(
+      生成元素(
+        "script",
+        {
+          id: `snippetJS${id}`,
+          type: "text/javascript",
+        },
+        代码片段内容
+      )
+    );
+  }
+}
+function 生成元素(标签, 属性对象, 内容) {
+  let 元素 = document.createElement(标签);
+  Object.getOwnPropertyNames(属性对象).forEach((属性名) =>
+    元素.setAttribute(属性名, 属性对象[属性名])
+  );
+  元素.innerHTML = 内容;
+  return 元素;
+}
+function kebabToCamel(str) {
+  const arr = str.split('-');
+  let camelStr = '';
+  
+  for (let i = 0; i < arr.length; i++) {
+    const word = arr[i];
+    camelStr += i === 0 ? word : word[0].toUpperCase() + word.slice(1); 
+  }
+  
+  return camelStr;
 }

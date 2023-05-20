@@ -1,0 +1,560 @@
+[
+  {
+    "group": "背景样式",
+    "props": [
+      { "name": "background-color", "label": "背景颜色", "type": "color" },
+      { "name": "background-image", "label": "背景图", "type": "image" },
+      {
+        "name": "background-position",
+        "label": "相对位置",
+        "type": "string",
+        "optionx": ["top", "center", "bottom"],
+        "optiony": ["center", "left", "right"]
+      },
+      {
+        "name": "background-repeat",
+        "label": "重复",
+        "type": "select",
+        "option": ["repeat", "repeat-x", "repeat-y", "no-repeat", "default"]
+      },
+      {
+        "name": "background-clip",
+        "label": "裁剪",
+        "type": "select",
+        "option": ["border-box", "padding-box", "content-box", "default"]
+      },
+      {
+        "name": "background-origin",
+        "label": "对齐基准",
+        "type": "select",
+        "option": ["border-box", "padding-box", "content-box", "default"]
+      },
+      {
+        "name": "background-size",
+        "label": "大小",
+        "type": "select",
+        "option": ["length", "percentage", "cover", "contain", "default"]
+      }
+    ]
+  },
+
+  {
+    "group": "边框线型",
+    "props": [
+      {
+        "name": "border-style",
+        "label": "全部样式",
+        "type": "select",
+        "option": [
+          "none",
+          "hidden",
+          "dotted",
+          "dashed",
+          "solid",
+          "double",
+          "groove",
+          "ridge",
+          "inset",
+          "outset",
+          "inherit",
+          "default"
+        ]
+      },
+      {
+        "name": "border-top-style",
+        "label": "顶部样式",
+        "type": "select",
+        "option": [
+          "none",
+          "hidden",
+          "dotted",
+          "dashed",
+          "solid",
+          "double",
+          "groove",
+          "ridge",
+          "inset",
+          "outset",
+          "inherit",
+          "default"
+        ]
+      },
+      {
+        "name": "border-bottom-style",
+        "label": "底部样式",
+        "type": "select",
+        "option": [
+          "none",
+          "hidden",
+          "dotted",
+          "dashed",
+          "solid",
+          "double",
+          "groove",
+          "ridge",
+          "inset",
+          "outset",
+          "inherit",
+          "default"
+        ]
+      },
+      {
+        "name": "border-left-style",
+        "label": "左侧样式",
+        "type": "select",
+        "option": [
+          "none",
+          "hidden",
+          "dotted",
+          "dashed",
+          "solid",
+          "double",
+          "groove",
+          "ridge",
+          "inset",
+          "outset",
+          "inherit",
+          "default"
+        ]
+      },
+      {
+        "name": "border-right-style",
+        "label": "右侧样式",
+        "type": "select",
+        "option": [
+          "none",
+          "hidden",
+          "dotted",
+          "dashed",
+          "solid",
+          "double",
+          "groove",
+          "ridge",
+          "inset",
+          "outset",
+          "inherit",
+          "default"
+        ]
+      }
+    ]
+  },
+  {
+    "group": "边框颜色",
+    "props": [
+      { "name": "border-color", "label": "全部颜色", "type": "color" },
+      { "name": "border-top-color", "label": "顶部颜色", "type": "color" },
+      { "name": "border-bottom-color", "label": "底部颜色", "type": "color" },
+      { "name": "border-left-color", "label": "左侧颜色", "type": "color" },
+      { "name": "border-right-color", "label": "右侧颜色", "type": "color" }
+    ]
+  },
+  {
+    "group": "边框宽度",
+    "props": [
+      { "name": "border-width", "label": "全部宽度", "type": "number" },
+      { "name": "border-top-width", "label": "顶部宽度", "type": "number" },
+      { "name": "border-bottom-width", "label": "底部宽度", "type": "number" },
+      { "name": "border-left-width", "label": "左侧宽度", "type": "number" },
+      { "name": "border-right-width", "label": "右侧宽度", "type": "number" }
+    ]
+  },
+  {
+    "group": "边框圆角",
+    "props": [
+      { "name": "border-radius", "label": "全部圆角", "type": "number" },
+      {
+        "name": "border-top-left-radius",
+        "label": "左上圆角",
+        "type": "number"
+      },
+      {
+        "name": "border-bottom-left-radius",
+        "label": "左下圆角",
+        "type": "number"
+      },
+      {
+        "name": "border-top-right-radius",
+        "label": "右上圆角",
+        "type": "number"
+      },
+      {
+        "name": "border-bottom-right-radius",
+        "label": "右下圆角",
+        "type": "number"
+      }
+    ]
+  },
+
+  {
+    "group": "图像边框",
+    "props": [
+      { "name": "border-image-source", "label": "图像源", "type": "image" },
+      { "name": "border-image-slice", "label": "向内偏移", "type": "number" },
+      { "name": "border-image-width", "label": "宽度", "type": "number" },
+      { "name": "border-image-outset", "label": "溢出", "type": "number" },
+      {
+        "name": "border-image-repeat",
+        "label": "重复样式",
+        "type": "select",
+        "option": ["repeated", "stretched", "rounded", "default"]
+      }
+    ]
+  },
+
+  {
+    "group": "轮廓样式",
+    "props": [
+      { "name": "outline-color", "label": "轮廓颜色", "type": "color" },
+      {
+        "name": "outline-style",
+        "label": "轮廓样式",
+        "type": "select",
+        "option": [
+          "none",
+          "hidden",
+          "dotted",
+          "dashed",
+          "solid",
+          "double",
+          "groove",
+          "ridge",
+          "inset",
+          "outset",
+          "inherit",
+          "default"
+        ]
+      },
+      { "name": "outline-width", "label": "轮廓宽度", "type": "number" }
+    ]
+  },
+
+  {
+    "group": "边距",
+    "props": [
+      { "name": "margin", "label": "全部边距", "type": "number" },
+      { "name": "margin-left", "label": "左侧边距", "type": "number" },
+      { "name": "margin-right", "label": "右侧边距", "type": "number" },
+      { "name": "margin-top", "label": "顶部边距", "type": "number" },
+      { "name": "margin-bottom", "label": "底部边距", "type": "number" }
+    ]
+  },
+  {
+    "group": "内边距",
+    "props": [
+      { "name": "padding", "label": "全部填充", "type": "number" },
+      { "name": "padding-left", "label": "左侧填充", "type": "number" },
+      { "name": "padding-right", "label": "右侧填充", "type": "number" },
+      { "name": "padding-top", "label": "顶部填充", "type": "number" },
+      { "name": "padding-bottom", "label": "底部填充", "type": "number" }
+    ]
+  },
+
+  {
+    "group": "文本溢流",
+    "props": [
+      { "name": "overflow-x", "label": "横向溢流", "type": "number" },
+      { "name": "overflow-y", "label": "纵向溢流", "type": "number" }
+    ]
+  },
+
+  {
+    "group": "尺寸和透明度",
+    "props": [
+      { "name": "opacity", "label": "透明度", "type": "number" },
+      { "name": "height", "label": "高度", "type": "number" },
+      { "name": "width", "label": "宽度", "type": "number" },
+      { "name": "max-height", "label": "最大高度", "type": "number" },
+      { "name": "max-width", "label": "最大宽度", "type": "number" },
+      { "name": "min-height", "label": "最小高度", "type": "number" },
+      { "name": "min-width", "label": "最小宽度", "type": "number" }
+    ]
+  },
+
+  {
+    "group": "字体属性",
+    "props": [
+      { "name": "font-family", "label": "字体系列", "type": "fonts" },
+      { "name": "font-size", "label": "字体大小", "type": "number" },
+      { "name": "font-variant", "label": "大小写", "type": "string" },
+      { "name": "font-weight", "label": "字体宽度", "type": "number" }
+    ]
+  },
+  {
+    "group": "文本样式",
+    "props": [
+      { "name": "color", "label": "文本颜色", "type": "color" },
+      {
+        "name": "writing-mode",
+        "label": "书写模式",
+        "type": "select",
+        "option": ["vertical-lr", "vertical-rl", "default"]
+      },
+      {
+        "name": "direction",
+        "label": "文本方向",
+        "type": "select",
+        "option": ["ltr", "rtl", "default"]
+      },
+      { "name": "letter-spacing", "label": "字符间距", "type": "number" },
+      { "name": "line-height", "label": "行高", "type": "number" },
+      {
+        "name": "text-align",
+        "label": "水平对齐",
+        "type": "select",
+        "option": ["left", "right", "center", "justify", "default"]
+      },
+      {
+        "name": "text-decoration",
+        "label": "文本装饰",
+        "type": "select",
+        "option": [
+          "none",
+          "underline",
+          "overline",
+          "line-through",
+          "blink",
+          "default"
+        ]
+      },
+      {
+        "name": "text-decoration-color",
+        "label": "文本装饰颜色",
+        "type": "color"
+      },
+      {
+        "name": "text-decoration-line",
+        "label": "文本装饰类型",
+        "type": "select",
+        "option": [
+          "none",
+          "underline",
+          "overline",
+          "line-through",
+          "blink",
+          "default"
+        ]
+      },
+      {
+        "name": "text-decoration-style",
+        "label": "文本装饰线型",
+        "type": "select",
+        "option": [
+          "none",
+          "solid",
+          "double",
+          "dashed",
+          "dotted",
+          "wavy",
+          "default"
+        ]
+      },
+      { "name": "vertical-align", "label": "垂直对齐", "type": "number" },
+      { "name": "text-shadow", "label": "文本阴影", "type": "string" }
+    ]
+  },
+  {
+    "group": "分列",
+    "props": [
+      { "name": "column-count", "label": "分列数量", "type": "number" },
+      { "name": "column-gap", "label": "列间隙宽", "type": "number" },
+      { "name": "column-rule-color", "label": "间隙线颜色", "type": "color" },
+      {
+        "name": "column-rule-style",
+        "label": "间隙线样式",
+        "type": "select",
+        "option": [
+          "none",
+          "hidden",
+          "dotted",
+          "dashed",
+          "solid",
+          "double",
+          "groove",
+          "ridge",
+          "inset",
+          "outset",
+          "inherit",
+          "default"
+        ]
+      },
+      { "name": "column-rule-width", "label": "间隙线宽度", "type": "number" },
+      { "name": "column-width", "label": "列宽", "type": "number" }
+    ]
+  },
+  {
+    "group": "显示样式",
+    "props": [
+      {
+        "name": "display",
+        "label": "显示样式",
+        "type": "select",
+        "option": [
+          "none",
+          "block",
+          "inline",
+          "inline-block",
+          "list-item",
+          "run-in",
+          "table",
+          "inline-table",
+          "table-row-group",
+          "table-header-group",
+          "table-footer-group",
+          "table-row",
+          "table-column-group",
+          "table-column",
+          "table-cell",
+          "table-caption",
+          "flex",
+          "grid"
+        ]
+      }
+    ]
+  },
+
+  {
+    "group": "flex容器属性",
+    "props": [
+      {
+        "name": "flex-direction",
+        "label": "方向",
+        "type": "select",
+        "option": ["row", "row-reverse", "column", "column-reverse"]
+      },
+      {
+        "name": "flex-wrap",
+        "label": "换行",
+        "type": "select",
+        "option": ["nowrap", "wrap", "wrap-reverse"]
+      },
+      {
+        "name": "justify-content",
+        "label": "主轴对齐",
+        "type": "select",
+        "option": [
+          "flex-star",
+          "flex-end",
+          "center",
+          "space-between",
+          "space-around"
+        ]
+      },
+      {
+        "name": "align-items",
+        "label": "交叉轴对齐",
+        "type": "select",
+        "option": ["flex-star", "flex-end", "center", "baseline", "stretch"]
+      },
+      {
+        "name": "align-content",
+        "label": "内容对齐",
+        "type": "select",
+        "option": ["flex-star", "flex-end", "center", "baseline", "stretch"]
+      }
+    ]
+  },
+
+  {
+    "group": "flex项目属性",
+    "props": [
+      { "name": "order", "label": "序列", "type": "number" },
+      { "name": "flex-grow", "label": "放大", "type": "number" },
+      { "name": "flex-shrink", "label": "缩小", "type": "color" },
+      { "name": "flex-basis", "label": "基本", "type": "number" },
+      {
+        "name": "align-self",
+        "label": "自身对齐",
+        "type": "select",
+        "option": [
+          "flex-star",
+          "flex-end",
+          "center",
+          "baseline",
+          "stretch",
+          "auto"
+        ]
+      }
+    ]
+  },
+  {
+    "group": "网格容器属性",
+    "props": [
+      { "name": "grid-template-columns", "label": "列规则", "type": "string" },
+      { "name": "grid-template-rows", "label": "行规则", "type": "string" },
+      { "name": "grid-template-areas", "label": "区域规则", "type": "string" },
+      { "name": "grid-column-gap", "label": "列间距", "type": "number" },
+      { "name": "grid-row-gap", "label": "行间距", "type": "number" },
+      {
+        "name": "justify-items",
+        "label": "行对齐",
+        "type": "select",
+        "option": ["start", "end", "center", "stretch"]
+      },
+      {
+        "name": "align-items",
+        "label": "列对齐",
+        "type": "select",
+        "option": ["start", "end", "center", "stretch"]
+      },
+      {
+        "name": "justify-content",
+        "label": "整体行对齐",
+        "type": "select",
+        "option": [
+          "start",
+          "end",
+          "center",
+          "stretch",
+          "space-around",
+          "space-between",
+          "space-evenly"
+        ]
+      },
+      {
+        "name": "align-content",
+        "label": "整体列对齐",
+        "type": "select",
+        "option": [
+          "start",
+          "end",
+          "center",
+          "stretch",
+          "space-around",
+          "space-between",
+          "space-evenly"
+        ]
+      },
+      { "name": "grid-auto-columns", "label": "自动列", "type": "number" },
+      { "name": "grid-auto-rows", "label": "自动行", "type": "number" },
+      {
+        "name": "grid-auto-flow",
+        "label": "自动行",
+        "type": "select",
+        "option": ["row", "column", "row dense", "column dense"]
+      }
+    ]
+  },
+  {
+    "group": "网格项目属性",
+    "props": [
+      { "name": "grid-column-start", "label": "起始列规则", "type": "string" },
+      { "name": "grid-column-end", "label": "结束列规则", "type": "string" },
+      { "name": "grid-row-start", "label": "起始行规则", "type": "string" },
+      { "name": "grid-row-end", "label": "结束行规则", "type": "string" },
+      {
+        "name": "justify-self",
+        "label": "",
+        "type": "select",
+        "option": ["star", "end", "center", "stretch"]
+      },
+      {
+        "name": "align-self",
+        "label": "",
+        "type": "select",
+        "option": ["star", "end", "center", "stretch"]
+      }
+    ]
+  }
+]
+
+
