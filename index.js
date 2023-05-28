@@ -1837,6 +1837,7 @@ function cssToJson(cssText) {
               memo:  _value.value + "不是" + styleName + "的合法值:" + e,
             });
           }
+
           switch (_value.constructor.name) {
             case "CSSUnitValue":
               array.push({
@@ -1853,7 +1854,7 @@ function cssToJson(cssText) {
               if (isColor(_value.toString())) {
                 array.push({
                   name: styleName,
-                  default: _value.value,
+                  default: _value.toString(),
                   type: "color",
                   label: styleName,
                   selector: rule.selectorText,
@@ -1868,7 +1869,7 @@ function cssToJson(cssText) {
               if (isColor(_value.toString().trim())) {
                 array.push({
                   name: styleName,
-                  default: _value[0].trim(),
+                  default: _value.toString().trim(),
                   type: "color",
                   label: styleName,
                   selector: rule.selectorText,
@@ -1883,6 +1884,7 @@ function cssToJson(cssText) {
                   label: styleName,
                   selector: rule.selectorText,
                   memo: "",
+                  type:styleName.indexOf('color')>-1?'color':null
                 };
                 let rootFined = array.find((item) => {
                   return (
@@ -2001,10 +2003,10 @@ function isColor(value) {
     "gainsboro",
     "ghostwhite",
   ]);
-  try {
+  /*try {
     CSSStyleValue.parse("color", value);
     return "color";
-  } catch (e) {}
+  } catch (e) {}*/
   if (
     value.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/) ||
     value.match(

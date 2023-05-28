@@ -1,0 +1,36 @@
+.b3-typography .h1,
+.b3-typography h1,
+.protyle-wysiwyg .h1,
+.protyle-wysiwyg h1 {
+  color: rgba(146.24137273231435, 187.12332589285714, 62.95305459846278, 1);
+}
+.b3-typography .h2,
+.b3-typography h2,
+.protyle-wysiwyg .h2,
+.protyle-wysiwyg h2 {
+  color: rgba(35.22827937368756, 153.25613839285714, 57.226775418555135, 1);
+}
+.b3-typography .h3,
+.b3-typography h3,
+.protyle-wysiwyg .h3,
+.protyle-wysiwyg h3 {
+  color: rgba(49.33414799486227, 102.88225446428571, 70.78924868964242, 1);
+}
+.b3-typography .h4,
+.b3-typography h4,
+.protyle-wysiwyg .h4,
+.protyle-wysiwyg h4 {
+  color: rgba(87.22935267857144, 25.893685396236414, 25.893685396236414, 1);
+}
+.b3-typography .h5,
+.b3-typography h5,
+.protyle-wysiwyg .h5,
+.protyle-wysiwyg h5 {
+  color: rgba(82.67578125, 29.82793991722563, 29.82793991722563, 1);
+}
+.b3-typography .h6,
+.b3-typography h6,
+.protyle-wysiwyg .h6,
+.protyle-wysiwyg h6 {
+  color:#202124;
+}
