@@ -1,0 +1,76 @@
+[
+  {
+    "name": "font-size",
+    "type": "number",
+    "label": "一级标题文字大小",
+    "selector": ".b3-typography .h1, .b3-typography h1, .protyle-wysiwyg .h1, .protyle-wysiwyg h1",
+    "memo": "",
+    "default": "1.75",
+    "unit": "rem",
+    "step": 0.01,
+    "min": 1,
+    "max": 10
+  },
+  {
+    "name": "font-size",
+    "type": "number",
+    "label": "二级标题文字大小",
+    "selector": ".b3-typography .h2, .b3-typography h2, .protyle-wysiwyg .h2, .protyle-wysiwyg h2",
+    "memo": "",
+    "default": "1.55",
+    "unit": "rem",
+    "step": 0.01,
+    "min": 1,
+    "max": 10
+  },
+  {
+    "name": "font-size",
+    "type": "number",
+    "label": "三级标题文字大小",
+    "selector": ".b3-typography .h3, .b3-typography h3, .protyle-wysiwyg .h3, .protyle-wysiwyg h3",
+    "memo": "",
+    "default": "1.38",
+    "unit": "rem",
+    "step": 0.01,
+    "min": 1,
+    "max": 10
+  },
+
+  {
+    "name": "font-size",
+    "type": "number",
+    "label": "四级标题文字大小",
+    "selector": ".b3-typography .h4, .b3-typography h4, .protyle-wysiwyg .h4, .protyle-wysiwyg h4",
+    "memo": "",
+    "default": "1.25",
+    "unit": "rem",
+    "step": 0.01,
+    "min": 1,
+    "max": 10
+  },
+  {
+    "name": "font-size",
+    "type": "number",
+    "label": "五级标题文字大小",
+    "selector": ".b3-typography .h5, .b3-typography h5, .protyle-wysiwyg .h5, .protyle-wysiwyg h5",
+    "memo": "",
+    "default": "1.13",
+    "unit": "rem",
+    "step": 0.01,
+    "min": 1,
+    "max": 10
+  }
+  ,
+  {
+    "name": "font-size",
+    "type": "number",
+    "label": "六级标题文字大小",
+    "selector": ".b3-typography .h6, .b3-typography h6, .protyle-wysiwyg .h6, .protyle-wysiwyg h6",
+    "memo": "",
+    "default": "1",
+    "unit": "rem",
+    "step": 0.01,
+    "min": 1,
+    "max": 10
+  }
+]
