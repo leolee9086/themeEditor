@@ -659,7 +659,7 @@ class themeEditor extends Plugin {
         title: "输入文件名,留空取消",
         content: `<div class="fn__flex"><input class="fn__flex-1 b3-text-field  b3-filter" placeholder="输文件名,其实安全上下文内那个+号可以右键上传"></div>`,
         width: "400px",
-        height: "48px",
+        height: "96px",
         destroyCallback: async () => {
           let name = Dialog.element.querySelector("input").value;
           if (name) {
