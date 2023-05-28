@@ -1688,8 +1688,8 @@ function 合并主题配置(原始主题配置, 配置类型) {
       return rule.selectorText == (item.selector || ":root");
     });
     if (ruler2 && ruler2.style.getPropertyValue(item.name)) {
-      !item.default || finded
-        ? (item.default = ruler2.style.getPropertyValue(item.name))
+      
+        !item.value ? (item.default = ruler2.style.getPropertyValue(item.name))
         : null;
       item.ruler = ruler2;
     }
