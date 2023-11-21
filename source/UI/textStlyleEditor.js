@@ -1,5 +1,7 @@
 import { clientApi, plugin } from "../asyncModules.js"
 import { initVueApp } from "./utils/componentsLoader.js"
+import { Constants } from "../asyncModules.js"
+
 import "./blockHandler.js"
 export const openStyleDialog = (blockElements) => {
     if (plugin.styleDialog) {

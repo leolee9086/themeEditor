@@ -18,7 +18,6 @@
             <DecorationStyle></DecorationStyle>
             <div class="cc-toolbar__divider"></div>
             行高<CssSizeInputter  :modelValue="lineHeight" @update:modelValue="updateLineHeight"></CssSizeInputter>
-
     </div>
     <div class="cc-toolbar__divider__vertical"></div>
 </div>

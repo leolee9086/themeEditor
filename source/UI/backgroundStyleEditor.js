@@ -8,7 +8,7 @@ export const openStyleDialog = (blockElements) => {
     }
     const dialog = new clientApi.Dialog(
         {
-            title: '块背景样式',
+            title: '块背景样式-实验性,右边那个垃圾桶可以清理掉块的背景',
             content: `
 <div id="styleEditorPanel" 
 class='fn__flex-column styleEditor'  

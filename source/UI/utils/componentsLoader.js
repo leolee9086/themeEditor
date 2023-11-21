@@ -109,7 +109,7 @@ export const initVueApp = (appURL, name, mixinOptions = {}, directory, data) => 
             });
         }
 
-        watchDirectory(directory);
+        directory&& watchDirectory(directory);
 
 
     }
