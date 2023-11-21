@@ -280,15 +280,11 @@ class themeEditor extends Plugin {
     }
     let el = document.getElementById("themeEditorColorPlate");
     el ? el.remove() : null;
-
     this.正在初始化 = true;
     let _path= `/plugins/themeEditor/source`
     await import ( _path+'/init.js');
-    await import ( _path+'/UI/docks.js');
-
-    //await this.创建配置面板();
-    await this.绑定主题配置选择();
-    await this.绑定公共配置选择();
+    await (await import ( _path+'/UI/docks.js')).init();
+    //await this.绑定公共配置选择();
     await this.绑定配置产物选择();
     await this.绑定公共配置上传();
     await this.绑定配置产物上传();
