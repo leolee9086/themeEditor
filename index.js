@@ -420,7 +420,9 @@ class themeEditor extends Plugin {
     el ? el.remove() : null;
 
     this.正在初始化 = true;
-    await this.初始化设置css();
+    let _path= `/plugins/themeEditor/source/init.js`
+    await import ( _path);
+
     await this.创建配置面板();
     await this.绑定主题配置选择();
     await this.绑定公共配置选择();
@@ -542,10 +544,7 @@ class themeEditor extends Plugin {
       this.生成css();
     };
   }
-  初始化设置css() {
-    let _path= `/plugins/themeEditor/source/init.js`
-    import ( _path);
-  }
+ 
   绑定公共配置上传() {
     let 上传按钮 = this.dock面板元素.querySelector(
       '[data-custom-action="upLoadConfigs"]'
