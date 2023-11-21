@@ -4,6 +4,7 @@ import { default as 思源工作空间 } from '../polyfills/fs.js'
 import path from "../polyfills/path.js"
 import { download } from "../utils/files.js";
 import { 保存 } from "../utils/files.js";
+import { 生成css代码片段,移除代码片段 } from "../utils/snippets.js";
 export async function 绑定dock事件() {
   await 绑定主题配置选择()
   await 绑定公共配置选择()

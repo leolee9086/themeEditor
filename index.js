@@ -91,7 +91,10 @@ class themeEditor extends Plugin {
     }
     console.log("开始初始化");
     await this.初始化后端接口();
-    await this.初始化数据();
+
+    //初始化数据
+    let fn= (await import(`/plugins/${this.name}/source/data/index.js`))["初始化插件数据"];
+    await fn()
     await this.初始化界面();
   }
   async 监听当前主题变化() {
@@ -106,137 +109,7 @@ class themeEditor extends Plugin {
     核心api = (await importDep("./polyfills/kernelApi.js"))["default"];
     思源工作空间 = (await importDep("./polyfills/fs.js"))["default"];
   }
-  async 初始化数据() {
-    this.data = {};
-    await 思源工作空间.mkdir(this.dataPath);
-    await 思源工作空间.mkdir(path.join(this.dataPath, "commonConfigs"));
-    await 思源工作空间.mkdir(path.join(this.dataPath, "commonProducts"));
-    await 思源工作空间.mkdir(path.join(this.dataPath, "themeProducts"));
-    await this.获取当前公共配置文件数组();
-    await this.获取当前主题配置文件数组();
 
-    if (
-      await 思源工作空间.exists(path.join(this.dataPath, "lastValues.json"))
-    ) {
-      // console.log(this.lastValues);
-      this.lastValues = await 思源工作空间.readFile(
-        path.join(this.dataPath, "lastValues.json")
-      );
-      //console.log(this.lastValues);
-      this.lastValues = JSON.parse(this.lastValues);
-    }
-    //如果没有设置过公共文件名,就使用默认的
-    if (!this.lastValues.lastCommonfigFileName) {
-      this.lastValues.lastCommonfigFileName = "defaultConfig.js";
-    }
-    //如果没有设置过公共文件路径,就使用默认的
-    if (!this.lastValues.lastCommonfigFilePath) {
-      this.lastValues.lastCommonfigFilePath = path.join(
-        this.dataPath,
-        "commonConfigs",
-        this.lastValues.lastCommonfigFileName
-      );
-    }
-    //如果没有设置过主题文件名,就使用第一个
-    if (this.lastValues.themeValues[获取当前主题文件夹URL()]) {
-      this.lastValues.lastThemeConfigFileName =
-        this.lastValues.themeValues[
-          获取当前主题文件夹URL()
-        ].lastThemeConfigFileName;
-      this.lastValues.lastThemeConfigFilePath =
-        this.lastValues.themeValues[
-          获取当前主题文件夹URL()
-        ].lastThemeConfigFilePath;
-      this.lastValues.themesCustomCss =
-        this.lastValues.themeValues[获取当前主题文件夹URL()].themesCustomCss;
-    } else {
-      this.lastValues.themesCustomCss = "";
-      this.lastValues.lastThemeConfigFileName = "";
-      this.lastValues.lastThemeConfigFilePath = "";
-    }
-    if (!this.lastValues.lastThemeConfigFileName) {
-      this.lastValues.lastThemeConfigFileName = this.当前主题配置文件数组[0];
-    }
-    //如果没有设置过主题文件路径,就使用第一个主题配置文件来生成
-    if (!this.lastValues.lastThemeConfigFilePath) {
-      this.lastValues.lastThemeConfigFilePath = path.join(
-        "/conf",
-        获取当前主题文件夹URL(),
-        this.lastValues.lastThemeConfigFileName || ""
-      );
-    }
-    if (this.lastValues.lastThemeConfigFilePath) {
-      let currentTheme = 获取当前主题文件夹URL().split("/").pop();
-
-      let subDir =
-        currentTheme +
-        "_" +
-        (this.lastValues.lastThemeConfigFileName || "undefined").split(".")[0] +
-        "_" +
-        btoa(toBinary(this.lastValues.lastThemeConfigFilePath)).substring(
-          0,
-          16
-        );
-      this.lastValues.themeProductsPath = path.join(
-        this.dataPath,
-        "themeProducts",
-        subDir
-      );
-      await 思源工作空间.mkdir(this.lastValues.themeProductsPath);
-      if (!(await 思源工作空间.readDir(this.lastValues.themeProductsPath))[0]) {
-        await 思源工作空间.writeFile(
-          "",
-          path.join(this.lastValues.themeProductsPath, "default.css")
-        );
-        this.lastValues.themeProductName = "default.css";
-      }
-    }
-    if (this.lastValues.lastCommonfigFilePath) {
-      let subDir =
-        (this.lastValues.lastCommonfigFileName || "undefined").split(".")[0] +
-        "_" +
-        btoa(toBinary(this.lastValues.lastCommonfigFilePath)).substring(0, 16);
-      this.lastValues.commonProductsPath = path.join(
-        this.dataPath,
-        "commonProducts",
-        subDir
-      );
-      await 思源工作空间.mkdir(this.lastValues.commonProductsPath);
-      if (
-        !(await 思源工作空间.readDir(this.lastValues.commonProductsPath))[0]
-      ) {
-        await 思源工作空间.writeFile(
-          "",
-          path.join(this.lastValues.commonProductsPath, "default.css")
-        );
-        this.lastValues.commonProductName = "default.css";
-      }
-    }
-    if (this.lastValues.themeProductsPath && this.lastValues.themeProductName) {
-      let themesCustomCss = await 思源工作空间.readFile(
-        path.join(
-          this.lastValues.themeProductsPath,
-          this.lastValues.themeProductName || "default.css"
-        )
-      );
-      this.lastValues.themesCustomCss =
-        themesCustomCss || this.lastValues.themesCustomCss;
-    }
-    if (
-      this.lastValues.commonProductsPath &&
-      this.lastValues.commonProductName
-    ) {
-      let commonCustomCss = await 思源工作空间.readFile(
-        path.join(
-          this.lastValues.commonProductsPath,
-          this.lastValues.commonProductName || "default.css"
-        )
-      );
-      this.lastValues.commonCustomCss =
-        commonCustomCss || this.lastValues.commonCustomCss;
-    }
-    // console.log(this.lastValues);
-  }
   async 获取当前主题配置文件路径(主题配置序号) {
     if (!主题配置序号) {
       主题配置序号 = 0;
@@ -323,43 +196,6 @@ class themeEditor extends Plugin {
       el.style.display = flag ? "" : "none";
     });
   }
-  async 创建配置面板() {
-    if (!Pickr) {
-      Pickr = (await import(this.selfURL + "/pickr-esm2022.js"))["default"];
-    }
-    this.dock面板元素.querySelector(".config__tab-container").innerHTML = "";
-    this.formItems = [];
-    await this.生成主题设置条目();
-    await this.生成通用设置条目();
-  }
-  async 生成主题设置条目() {
-    if (!this.lastValues.lastThemeConfigFilePath) {
-      return;
-    }
-    let 当前主题配置内容 = await 获取配置文件内容(
-      this.lastValues.lastThemeConfigFilePath
-    );
-    if (!当前主题配置内容) {
-      return;
-    }
-    合并主题配置(当前主题配置内容, "theme");
-    this.当前主题配置内容 = 当前主题配置内容;
-    this.生成设置条目(this.当前主题配置内容, "theme");
-  }
-  async 生成通用设置条目() {
-    let 当前通用配置内容 = await 获取配置文件内容(
-      this.lastValues.lastCommonfigFilePath
-    );
-    if (!当前通用配置内容) {
-      consoleError(
-        `获取当前通用设置:${this.lastValues.lastCommonfigFilePath}失败,请检查文件是否存在`
-      );
-      return;
-    }
-    合并主题配置(当前通用配置内容, "common");
-    this.当前通用配置内容 = 当前通用配置内容;
-    this.生成设置条目(this.当前通用配置内容, "common");
-  }
   生成css() {
     this.lastValues.commonCustomCss = 计算css.bind(this)(
       this.当前通用配置内容,
@@ -369,68 +205,6 @@ class themeEditor extends Plugin {
       this.当前主题配置内容,
       "theme"
     );
-  }
-  生成设置条目(设置内容, 设置类型) {
-    (this.groups = []), (this.subGroups = []);
-
-    设置内容.forEach((item) => {
-      try {
-        let formItem = new FormItem(
-          item,
-          this.dock面板元素.querySelector(".config__tab-container"),
-          () => {
-            this.生成css();
-          },
-          () => {
-            let el = document.getElementById("themeEditorColorPlate");
-            el ? el.remove() : null;
-          }
-        );
-        Object.defineProperty(item, "filted", {
-          get: () => {
-            return (
-              formItem.element.style.display !== "none" &&
-              !formItem.element.classList.contains("fn__none")
-            );
-          },
-        });
-        formItem.element.setAttribute("data-config", 设置类型);
-        formItem.element.setAttribute("data-group", item.group || "基础设置");
-        item.group ? this.groups.push(item.group) : null;
-        formItem.element.setAttribute(
-          "data-sub-group",
-          item.subGroup || "基础"
-        );
-        item.subGroup ? this.subGroups.push(item.subGroup) : null;
-        formItem.element.setAttribute(
-          "data-selectortext",
-          Lute.EscapeHTMLStr(item.selector) || ":root"
-        );
-        item.selector && item.selector !== ":root"
-          ? this.selectors.push(item.selector)
-          : null;
-        if (item.selector) {
-          this.selectors.push(item.selector);
-          let div = formItem.element.querySelector(".fn__flex-1");
-          div.innerHTML += `<span class='selector-text' style="font-size:12px;border-top:1px solid var(--b3-theme-surface-lighter)">选择器:${Lute.EscapeHTMLStr(
-            item.selector
-          )}</span>`;
-          div
-            .querySelector(".selector-text")
-            .addEventListener("mouseover", (e) => {
-              testselector(Lute.UnEscapeHTMLStr(item.selector));
-              e.stopPropagation();
-            });
-        }
-        this.groups = Array.from(new Set(this.groups));
-        this.subGroups = Array.from(new Set(this.subGroups));
-        this.selectors = Array.from(new Set(this.selectors));
-        //console.log(this);
-        this.formItems.push(formItem);
-      } catch (e) {
-        consoleError(`配置界面生成失败：${e}`);
-      }
-    });
   }
 
   async 保存() {
@@ -882,72 +656,6 @@ function batchSetAttribute(element, attributes) {
   });
 }
 //将配置文件的声明和当前主题的实际值进行混合
-function 合并主题配置(原始主题配置, 配置类型) {
-  let 当前主题元素 = window.parent.document.getElementById("themeStyle")
-    ? window.parent.document.getElementById("themeStyle")
-    : window.parent.document.getElementById("themeDefaultStyle");
-  let 当前目标元素 = document.getElementById(`themeEditorStyle-${配置类型}`);
-  //TODO:这里需要判空
-  原始主题配置.forEach((item) => {
-    let ruler1 = Array.from(当前主题元素.sheet.rules).find((rule) => {
-      return rule.selectorText == (item.selector || ":root");
-    });
-    let finded;
-    if (ruler1 && ruler1.style.getPropertyValue(item.name)) {
-      !item.default
-        ? (item.default = ruler1.style.getPropertyValue(item.name))
-        : null;
-      item.ruler = ruler1;
-      finded = true;
-    }
-    let ruler2 = Array.from(当前目标元素.sheet.rules).find((rule) => {
-      return rule.selectorText == (item.selector || ":root");
-    });
-    if (ruler2 && ruler2.style.getPropertyValue(item.name)) {
-      
-        !item.value ? (item.default = ruler2.style.getPropertyValue(item.name))
-        : null;
-      item.ruler = ruler2;
-    }
-  });
-  原始主题配置.forEach((item) => {
-    if (item.default && item.ruler) {
-      item.default = (item.default+'').trim();
-      if (item.default.startsWith("var")) {
-        item.value = item.ruler.style.getPropertyValue(
-          item.default.replace("var", "").replace("(", "").replace(")", "")
-        );
-        item.value = item.value.trim();
-        item.use = item.default
-          .replace("var", "")
-          .replace("(", "")
-          .replace(")", "");
-        Object.defineProperty(item, "value", {
-          get: () => {
-            let usedItem = 原始主题配置.find((item1) => {
-              return item1.name == item.use;
-            });
-            if (usedItem) {
-              return usedItem.value || usedItem.default;
-            } else {
-              return item._value;
-            }
-          },
-          set: (newValue) => {
-            let usedItem = 原始主题配置.find((item1) => {
-              return item1.name == item.use;
-            });
-            if (usedItem) {
-              usedItem.value = newValue;
-            } else {
-              item._value = newValue;
-            }
-          },
-        });
-      }
-    }
-  });
-}
 function testselector(selector) {
   if (selector === ":root") {
     return;
@@ -1208,10 +916,6 @@ function isColor(value) {
     "gainsboro",
     "ghostwhite",
   ]);
-  /*try {
-    CSSStyleValue.parse("color", value);
-    return "color";
-  } catch (e) {}*/
   if (
     value.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/) ||
     value.match(
@@ -1240,128 +944,4 @@ function isVarUse(value) {
   return value.match(/^var\((--[\w-]+)\)/);
 }
 
-function getUnit(value) {
-  if (value === 0) return "";
-  const units = [
-    "px",
-    "rem",
-    "em",
-    "vw",
-    "vh",
-    "%",
-    "cm",
-    "mm",
-    "in",
-    "pt",
-    "pc",
-    "ex",
-    "ch",
-  ];
-  for (let i = 0; i < units.length; i++) {
-    if (String(value).endsWith(units[i])) {
-      return units[i];
-    }
-  }
-  return "";
-}
-async function 移除代码片段(标记字符串) {
-  let 现有代码片段 = await 核心api.getSnippet({ type: "all", enabled: 2 });
-  let 存在元素索引 = 现有代码片段.snippets.findIndex((item) =>
-    item.content.startsWith(`/*${标记字符串}*/`)
-  );
-  if (存在元素索引 >= 0) {
-    现有代码片段.snippets.splice(存在元素索引, 1);
-    await 核心api.setSnippet(现有代码片段);
-    window.location.reload();
-  }
-}
-async function 生成css代码片段(标记字符串, css内容, 类型, 名称) {
-  let 现有代码片段 = await 核心api.getSnippet({ type: "all", enabled: 2 });
-  let id = Lute.NewNodeID() + "themeEditor";
-  let 存在元素索引 = 现有代码片段.snippets.findIndex((item) =>
-    item.content.startsWith(`/*${标记字符串}*/`)
-  );
-  let 判断主题函数内容 = `if(获取当前主题文件夹URL()==\`${获取当前主题文件夹URL()}\`)`;
-  类型 == "common" ? (判断主题函数内容 = "if(true)") : null;
-  let 代码片段内容 = `/*${标记字符串}*/
-    ${生成元素.toString()}
-    ${获取当前主题文件夹URL.toString()}
 
-    ${判断主题函数内容}{
-      
-    
-    document.head.appendChild(
-      生成元素(
-        "style",
-        {
-          id: \`${Lute.EscapeHTMLStr(标记字符串)}\`,
-          "data-provider":'${类型}'
-        },
-        \`${css内容}\`
-      )
-    )
-      }
-  `;
-  if (存在元素索引 >= 0) {
-    // 如果元素已存在，则替换元素value
-    现有代码片段.snippets[存在元素索引].content =
-      `/*${标记字符串}*/\n` + 代码片段内容;
-    现有代码片段.snippets[存在元素索引].name = 名称;
-    id = 现有代码片段.snippets[存在元素索引].id;
-    if (现有代码片段.snippets[存在元素索引].enabled) {
-      await 核心api.setSnippet(现有代码片段);
-      window.location.reload();
-    } else {
-      现有代码片段.snippets[存在元素索引].enabled = true;
-      await 核心api.setSnippet(现有代码片段);
-      document.head.appendChild(
-        生成元素(
-          "script",
-          {
-            id: `snippetJS${id}`,
-            type: "text/javascript",
-          },
-          代码片段内容
-        )
-      );
-    }
-  } else {
-    // 否则添加新元素
-    现有代码片段.snippets.push({
-      id: id,
-      content: 代码片段内容,
-      name: 名称,
-      type: "js",
-      enabled: true,
-    });
-    await 核心api.setSnippet(现有代码片段);
-    document.head.appendChild(
-      生成元素(
-        "script",
-        {
-          id: `snippetJS${id}`,
-          type: "text/javascript",
-        },
-        代码片段内容
-      )
-    );
-  }
-}
-function 生成元素(标签, 属性对象, 内容) {
-  let 元素 = document.createElement(标签);
-  Object.getOwnPropertyNames(属性对象).forEach((属性名) =>
-    元素.setAttribute(属性名, 属性对象[属性名])
-  );
-  元素.innerHTML = 内容;
-  return 元素;
-}
-function kebabToCamel(str) {
-  const arr = str.split('-');
-  let camelStr = '';
-  
-  for (let i = 0; i < arr.length; i++) {
-    const word = arr[i];
-    camelStr += i === 0 ? word : word[0].toUpperCase() + word.slice(1); 
-  }
-  return camelStr;
-}
