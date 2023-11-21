@@ -29,7 +29,6 @@ async function 复制默认公共配置文件() {
         path.join("data", "plugins", "themeEditor", "sampleConfigs",配置项目.name)
       );
       await 思源工作空间.writeFile(
-        默认配置文件内容,
         path.join(
           "data",
           "storage",
@@ -37,7 +36,8 @@ async function 复制默认公共配置文件() {
           "themeEditor",
           "commonConfigs",
           配置项目.name
-        )
+        ),
+        默认配置文件内容
       );
     }
   )
@@ -121,8 +121,8 @@ export const 初始化插件数据=async()=>{
       await 思源工作空间.mkdir(plugin.lastValues.themeProductsPath);
       if (!(await 思源工作空间.readDir(plugin.lastValues.themeProductsPath))[0]) {
         await 思源工作空间.writeFile(
-          "",
-          path.join(plugin.lastValues.themeProductsPath, "default.css")
+          
+          path.join(plugin.lastValues.themeProductsPath, "default.css"),"",
         );
         plugin.lastValues.themeProductName = "default.css";
       }
@@ -142,8 +142,8 @@ export const 初始化插件数据=async()=>{
         !(await 思源工作空间.readDir(plugin.lastValues.commonProductsPath))[0]
       ) {
         await 思源工作空间.writeFile(
-          "",
           path.join(plugin.lastValues.commonProductsPath, "default.css")
+          ,""
         );
         plugin.lastValues.commonProductName = "default.css";
       }

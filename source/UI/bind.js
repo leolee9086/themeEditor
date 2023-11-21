@@ -151,8 +151,8 @@ export function 绑定公共配置上传() {
         let name = 文件句柄.name;
         let file = await 文件句柄.getFile();
         await 思源工作空间.writeFile(
+          path.join(plugin.dataPath, "commonConfigs", name),
           file,
-          path.join(plugin.dataPath, "commonConfigs", name)
         );
       }
       let lastCommonfigFile = 文件数组[0] ? 文件数组[0].name : null;
@@ -204,7 +204,7 @@ function 绑定配置产物上传() {
           target === 上传按钮1
             ? plugin.lastValues.commonProductsPath
             : plugin.lastValues.themeProductsPath;
-        await 思源工作空间.writeFile(file, path.join(_path, name));
+        await 思源工作空间.writeFile(path.join(_path, name),file);
         target === 上传按钮1
           ? (plugin.lastValues.commonProductName = name)
           : (plugin.lastValues.themeProductName = name);

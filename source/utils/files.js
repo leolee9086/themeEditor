@@ -67,22 +67,23 @@ export async function download(type) {
     plugin.lastValues.themeValues[获取当前主题文件夹URL()].themesCustomCss =
       plugin.lastValues.themesCustomCss;
     //console.log(plugin.lastValues);
-    await 思源工作空间.writeFile(
-      plugin.lastValues.commonCustomCss,
-      path.join(
-        plugin.lastValues.commonProductsPath,
-        plugin.lastValues.commonProductName || "default.css"
-      )
+    await 思源工作空间.writeFile(path.join(
+      plugin.lastValues.commonProductsPath,
+      plugin.lastValues.commonProductName || "default.css"
+    ),
+      plugin.lastValues.commonCustomCss
+      
     );
     await 思源工作空间.writeFile(
-      plugin.lastValues.themesCustomCss,
       path.join(
         plugin.lastValues.themeProductsPath,
         plugin.lastValues.themeProductName || "default.css"
-      )
+      ),
+      plugin.lastValues.themesCustomCss
+      
     );
     await 思源工作空间.writeFile(
-      JSON.stringify(plugin.lastValues, undefined, 2),
-      path.join(plugin.dataPath, "lastValues.json")
+      path.join(plugin.dataPath, "lastValues.json"),
+      JSON.stringify(plugin.lastValues, undefined, 2)
     );
   }
