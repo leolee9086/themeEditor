@@ -9,7 +9,7 @@ export const openStyleDialog = (blockElements) => {
     }
     const dialog = new clientApi.Dialog(
         {
-            title: '块文字样式',
+            title: plugin.i18n.块文字样式,
             content: `
 <div id="styleEditorPanel" 
 class='fn__flex-column styleEditor'  
