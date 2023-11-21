@@ -1,6 +1,6 @@
 export class  kernelApiList{
     constructor(option={
-        思源伺服ip:window.location.hostname,
+        思源伺服ip:globalThis.location.hostname,
         思源伺服端口:'',
         思源伺服协议:"http",
 		apitoken:""
@@ -47,6 +47,7 @@ export class  kernelApiList{
 	this.set("POST", "/api/system/setWorkspaceDir",   "setWorkspaceDir","设置工作空间目录")
 	this.set("POST", "/api/system/getWorkspaces",  "getWorkspaces","获取工作空间目录")
 	this.set("POST", "/api/system/getMobileWorkspaces",  "getMobileWorkspaces","获取移动端工作空间目录")
+	this.set("POST", "/api/system/checkWorkspaceDir",   "checkWorkspaceDir")//仅生成函数,尚未定义
 	this.set("POST", "/api/system/createWorkspaceDir",   "createWorkspaceDir","创建工作空间")
 	this.set("POST", "/api/system/removeWorkspaceDir",   "removeWorkspaceDir","移除动作空间")
 	this.set("POST", "/api/system/setAppearanceMode",  "setAppearanceMode","设置外观模式")
@@ -133,6 +134,7 @@ export class  kernelApiList{
 	this.set("POST", "/api/lute/copyStdMarkdown",  "copyStdMarkdown","复制标准markdown")
 
 	this.set("POST", "/api/query/sql",  "SQL")
+	this.set("POST", "/api/query/sql",  "sql")
 
 	this.set("POST", "/api/search/searchTag",  "searchTag","搜索标签")
 	this.set("POST", "/api/search/searchTemplate",  "searchTemplate","搜索模板")
@@ -143,6 +145,8 @@ export class  kernelApiList{
 	this.set("POST", "/api/search/fullTextSearchBlock",  "fullTextSearchBlock","全文搜索块")
 	this.set("POST", "/api/search/searchAsset",  "searchAsset","搜索资源")
 	this.set("POST", "/api/search/findReplace",   "findReplace","查找替换")
+	this.set("POST", "/api/search/fullTextSearchAssetContent",  "fullTextSearchAssetContent")//仅生成函数,尚未定义
+	this.set("POST", "/api/search/getAssetContent",  "getAssetContent")//仅生成函数,尚未定义
 
 	this.set("POST", "/api/block/getBlockInfo",  "getBlockInfo","获取块信息")
 	this.set("POST", "/api/block/getBlockDOM",  "getBlockDOM","获取块DOM")
@@ -179,6 +183,7 @@ export class  kernelApiList{
 	this.set("POST", "/api/file/putFile",   "putFile","上传文件")
 	this.set("POST", "/api/file/copyFile",   "copyFile","复制文件")
 	this.set("POST", "/api/file/removeFile",   "removeFile","移除文件")
+	this.set("POST", "/api/file/renameFile",   "renameFile")//仅生成函数,尚未定义
 	this.set("POST", "/api/file/readDir",   "readDir")
 
 	this.set("POST", "/api/ref/refreshBacklink",  "refreshBacklink","刷新反向链接")
@@ -195,6 +200,7 @@ export class  kernelApiList{
 	this.set("POST", "/api/cloud/getCloudSpace",  "getCloudSpace","获取云端空间")
 
 	this.set("POST", "/api/sync/setSyncEnable",   "setSyncEnable","设置同步开关")
+	this.set("POST", "/api/sync/setSyncPerception",   "setSyncPerception")//仅生成函数,尚未定义
 	this.set("POST", "/api/sync/setSyncGenerateConflictDoc",   "setSyncGenerateConflictDoc","设置同步是否生成冲突文件")
 	this.set("POST", "/api/sync/setSyncMode",   "setSyncMode","设置同步模式")
 	this.set("POST", "/api/sync/setSyncProvider",   "setSyncProvider","设置同步供应商")
@@ -207,6 +213,7 @@ export class  kernelApiList{
 	this.set("POST", "/api/sync/performSync",   "performSync","执行同步")
 	this.set("POST", "/api/sync/performBootSync",   "performBootSync","执行启动同步")
 	this.set("POST", "/api/sync/getBootSync",  "getBootSync","获取启动同步")
+	this.set("POST", "/api/sync/getSyncInfo",  "getSyncInfo")//仅生成函数,尚未定义
 
 	this.set("POST", "/api/inbox/getShorthands",  "getShorthands","获取收集箱简写列表")
 	this.set("POST", "/api/inbox/getShorthand",  "getShorthand","获取收集箱简写")
@@ -223,12 +230,14 @@ export class  kernelApiList{
 	this.set("POST", "/api/asset/setFileAnnotation",   "setFileAnnotation","设置附件注释")
 	this.set("POST", "/api/asset/getFileAnnotation",  "getFileAnnotation","获取附件注释")
 	this.set("POST", "/api/asset/getUnusedAssets",  "getUnusedAssets","获取未使用的附件")
+	this.set("POST", "/api/asset/getMissingAssets",  "getMissingAssets")//仅生成函数,尚未定义
 	this.set("POST", "/api/asset/removeUnusedAsset",   "removeUnusedAsset","删除未使用的附件")
 	this.set("POST", "/api/asset/removeUnusedAssets",   "removeUnusedAssets","批量删除未使用的附件")
 	this.set("POST", "/api/asset/getDocImageAssets",   "getDocImageAssets","获取文档图片附件")
 	this.set("POST", "/api/asset/renameAsset",   "renameAsset","重命名附件")
 	this.set("POST", "/api/asset/getImageOCRText",   "getImageOCRText")
 	this.set("POST", "/api/asset/setImageOCRText",   "setImageOCRText")
+	this.set("POST", "/api/asset/fullReindexAssetContent",   "fullReindexAssetContent")//仅生成函数,尚未定义
 
 	this.set("POST", "/api/export/batchExportMd",  "batchExportMd","批量导出Markdown")
 	this.set("POST", "/api/export/exportMd",  "exportMd","导出Markdown")
@@ -241,6 +250,7 @@ export class  kernelApiList{
 	this.set("POST", "/api/export/exportDocx",  "exportDocx","导出Docx")
 	this.set("POST", "/api/export/processPDF",  "processPDF","生成PDF")
 	this.set("POST", "/api/export/preview",  "exportPreview","预览")
+	this.set("POST", "/api/export/exportResources",  "exportResources")//仅生成函数,尚未定义
 	this.set("POST", "/api/export/exportAsFile",  "exportAsFile","文件形式导出")
 	this.set("POST", "/api/export/exportData",  "exportData","导出数据")
 	this.set("POST", "/api/export/exportDataInFolder",  "exportDataInFolder","导出数据到文件夹")
@@ -281,6 +291,7 @@ export class  kernelApiList{
 	this.set("POST", "/api/setting/setEmoji",   "setEmoji","设置emoji")
 	this.set("POST", "/api/setting/setFlashcard",   "setFlashcard")
 	this.set("POST", "/api/setting/setAI",   "setAI")
+	this.set("POST", "/api/setting/setBazaar",   "setBazaar")//仅生成函数,尚未定义
 
 	this.set("POST", "/api/graph/resetGraph",   "resetGraph","重置图谱")
 	this.set("POST", "/api/graph/resetLocalGraph",   "resetLocalGraph","重置本地图谱")
@@ -352,21 +363,45 @@ export class  kernelApiList{
 	this.set("GET", "/snippets/*filepath", "serveSnippets")
 
 	this.set("POST", "/api/av/renderAttributeView",  "renderAttributeView","渲染属性视图")
+	this.set("POST", "/api/av/getAttributeViewKeys",  "getAttributeViewKeys")//仅生成函数,尚未定义
+	this.set("POST", "/api/av/setAttributeViewBlockAttr",  "setAttributeViewBlockAttr")//仅生成函数,尚未定义
 
 	this.set("POST", "/api/ai/chatGPT",   "chatGPT")
 	this.set("POST", "/api/ai/chatGPTWithAction",   "chatGPTWithAction")
 
 	this.set("POST", "/api/petal/loadPetals",   "loadPetals")
 	this.set("POST", "/api/petal/setPetalEnabled",   "setPetalEnabled","启用插件实例")
+
+	this.set("POST", "/api/network/forwardProxy",   "forwardProxy")//仅生成函数,尚未定义
+	this.set("POST", "/api/archive/zip",  'zip')
+	this.set("POST", "/api/archive/unzip",  'unzip')
+
 }
 
-async set(方法,路径,英文名,中文名){
-    this[英文名] =this.生成方法(方法,路径).bind(this)
-    this[英文名]['raw'] =this.生成方法(方法,路径,true).bind(this)
-    中文名?this[中文名] = this[英文名]:null
-    this[路径]=this[英文名]
+async set(方法, 路径, 英文名, 中文名) {
+  this[英文名] = this.生成方法(方法, 路径).bind(this);
+  this[英文名]["raw"] = this.生成方法(方法, 路径, true).bind(this);
+  this[英文名]["sync"] = this.生成同步方法(方法, 路径, true).bind(this);
+  中文名 ? (this[中文名] = this[英文名]) : null;
+  this[路径] = this[英文名];
 }
-生成方法(方法,路径,flag){
+async set(方法, 路径, 英文名, 中文名) {
+	this[英文名] = this.生成方法(方法, 路径).bind(this);
+	this[英文名]["raw"] = this.生成方法(方法, 路径, true).bind(this);
+	this[英文名]["sync"] = this.生成同步方法(方法, 路径, true).bind(this);
+	中文名 ? (this[中文名] = this[英文名]) : null;
+	this[路径] = this[英文名];
+  }
+  生成同步方法(方法, 路径, flag) {
+	return (data) => {
+	  const xhr = new XMLHttpRequest();
+	  xhr.open(方法, this.思源伺服地址 + 路径, false);
+	  xhr.setRequestHeader("Content-Type", "application/json");
+	  xhr.send(JSON.stringify(data));
+	  return JSON.parse(xhr.responseText)["data"];
+	};
+  }
+  生成方法(方法,路径,flag){
     return async function(data,apitoken="",callback){
         let resData  = null
         if (data instanceof FormData) {
@@ -398,15 +433,14 @@ async set(方法,路径,英文名,中文名){
         else{
             if(callback){callback(realData?realData:null)}
             return realData?realData:null    
-
         }
     }
 }
 }
 
 export default new kernelApiList({        
-思源伺服ip:window.location.hostname,
-思源伺服端口:window.location.port,
+思源伺服ip:globalThis.location.hostname,
+思源伺服端口:globalThis.location.port,
 思源伺服协议:"http",
 apitoken:""
 })

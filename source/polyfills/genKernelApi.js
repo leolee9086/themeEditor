@@ -1,9 +1,9 @@
 import kernelApiDefine from "./kernelApiDefine.js";
-//const metaURL = import.meta.url;
+const metaURL = import.meta.url;
 //从GitHub获取后端插件内容
 
-let goFileURL ='https://raw.githubusercontent.com/siyuan-note/siyuan/master/kernel/api/router.go'
-//  metaURL.replace("genKernelApi.js", "") + "/static/siyuanKernelApis/router.go";
+let goFileURL =
+ metaURL.replace("genKernelApi.js", "") + "router.go";
 let goContent = await (await fetch(goFileURL)).text();
 let goLines = goContent.split("\n");
 let funStartIndex = goLines.findIndex((item) => {
@@ -11,7 +11,7 @@ let funStartIndex = goLines.findIndex((item) => {
 });
 let pre = `export class  kernelApiList{
     constructor(option={
-        思源伺服ip:window.location.hostname,
+        思源伺服ip:globalThis.location.hostname,
         思源伺服端口:'',
         思源伺服协议:"http",
 		apitoken:""
@@ -25,13 +25,30 @@ let pre = `export class  kernelApiList{
 	if(option.siYuanServiceURL){this.思源伺服地址=option.siYuanServiceURL}
 	if(option.思源伺服地址){this.思源伺服地址=option.思源伺服地址}`;
 let after = `
-async set(方法,路径,英文名,中文名){
-    this[英文名] =this.生成方法(方法,路径).bind(this)
-    this[英文名]['raw'] =this.生成方法(方法,路径,true).bind(this)
-    中文名?this[中文名] = this[英文名]:null
-    this[路径]=this[英文名]
+async set(方法, 路径, 英文名, 中文名) {
+  this[英文名] = this.生成方法(方法, 路径).bind(this);
+  this[英文名]["raw"] = this.生成方法(方法, 路径, true).bind(this);
+  this[英文名]["sync"] = this.生成同步方法(方法, 路径, true).bind(this);
+  中文名 ? (this[中文名] = this[英文名]) : null;
+  this[路径] = this[英文名];
 }
-生成方法(方法,路径,flag){
+async set(方法, 路径, 英文名, 中文名) {
+	this[英文名] = this.生成方法(方法, 路径).bind(this);
+	this[英文名]["raw"] = this.生成方法(方法, 路径, true).bind(this);
+	this[英文名]["sync"] = this.生成同步方法(方法, 路径, true).bind(this);
+	中文名 ? (this[中文名] = this[英文名]) : null;
+	this[路径] = this[英文名];
+  }
+  生成同步方法(方法, 路径, flag) {
+	return (data) => {
+	  const xhr = new XMLHttpRequest();
+	  xhr.open(方法, this.思源伺服地址 + 路径, false);
+	  xhr.setRequestHeader("Content-Type", "application/json");
+	  xhr.send(JSON.stringify(data));
+	  return JSON.parse(xhr.responseText)["data"];
+	};
+  }
+  生成方法(方法,路径,flag){
     return async function(data,apitoken="",callback){
         let resData  = null
         if (data instanceof FormData) {
@@ -63,15 +80,14 @@ async set(方法,路径,英文名,中文名){
         else{
             if(callback){callback(realData?realData:null)}
             return realData?realData:null    
-
         }
     }
 }
 }
 
 export default new kernelApiList({        
-思源伺服ip:window.location.hostname,
-思源伺服端口:window.location.port,
+思源伺服ip:globalThis.location.hostname,
+思源伺服端口:globalThis.location.port,
 思源伺服协议:"http",
 apitoken:""
 })
@@ -155,6 +171,5 @@ console.warn("生成的内容似乎有点问题",e)
 }
 let kernelApi = _module['default'];
 import fs from  './fs.js'
-await fs.writeFile(jsContent,'/data'+import.meta.url.replace(window.location.origin,'').replace("genKernelApi.js", "") + "kernelApi.js")
-
+await fs.writeFile('/data'+import.meta.url.replace(globalThis.location.origin,'').replace("genKernelApi.js", "") + "kernelApi.js",jsContent)
 export default kernelApi;
