@@ -1,5 +1,24 @@
 {
-  "addTopBarIcon": "Add a top bar icon by plugin",
-  "helloPlugin": "Hello, Plugin!",
-  "byePlugin": "Bye, Plugin!"
+  "单击显示/隐藏详细设置": "Click to show/hide detailed settings",
+  "重新开始设置": "Reset settings",
+  "清除当前设置": "Clear current settings",
+  "重载当前设置": "Reload current settings",
+  "保存当前设置":"Save current settings",
+  "创建一个针对当前主题的代码片段,左键添加/更新,右键删除\n在你要关掉这个插件的时候使用":  "Create a code snippet for the current theme, left click to add/update, right click to delete\nUse when you want to turn off this plugin",
+  "主题配置产品":  "Theme configuration product",
+  "公共配置文件":"Public configuration file",
+  "创建一个公共代码片段,左键添加/更新,右键删除\n在你要关掉这个插件的时候使用":"Create a public code snippet, left click to add/update, right click to delete\nUse when you want to turn off this plugin",
+  "公共配置产品":"Public configuration product",
+  "关键字过滤":"Keyword filtering",
+  "真实过滤":"Real filtering",
+  "配置源过滤":"Configuration source filtering",
+  "全部显示":"Show all",
+  "主题配置文件":"Theme configuration file",
+  "分组过滤":"Group filtering",
+  "全部":"All",
+  "基础设置":"Basic settings",
+  "基础":"Basic",
+  "选择器过滤":"Selector filtering",
+  "块背景样式-实验性,右边那个垃圾桶可以清理掉块的背景":"Block background style - experimental, the trash can on the right can clear the block background",
+  "块文字样式":"Block text style"
 }
