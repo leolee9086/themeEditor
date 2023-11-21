@@ -34,7 +34,6 @@ class themeEditor extends Plugin {
     this.创建配置Dock();
     //初始化界面和数据
     this.初始化();
-    this.监听当前主题变化();
     this.注册图标()
   }
   注册图标(){
@@ -114,9 +113,19 @@ class themeEditor extends Plugin {
     await fn()
     await this.初始化界面();
   }
-  async 监听当前主题变化() {
-    await import(`/plugins/${this.name}/source/events/stylesWatcher.js`)
-  }
+    //初始化界面是异步的,所以用正在初始化这个变量保存状态,如果初始化还没有完成就不继续了
+    async 初始化界面() {
+      if (this.正在初始化) {
+        return;
+      }
+      let el = document.getElementById("themeEditorColorPlate");
+      el ? el.remove() : null;
+      this.正在初始化 = true;
+      let _path= `/plugins/themeEditor/source`
+      await import ( _path+'/init.js');
+      await (await import ( _path+'/UI/docks.js')).init();
+    }
+
   async 初始化后端接口() {
     path = (await import(this.selfURL + "/polyfills/path.js"))["default"];
     importDep = async (moduleName) => {
@@ -162,18 +171,7 @@ class themeEditor extends Plugin {
     this.当前主题配置文件数组 = 主题配置文件数组 || [];
     return this.当前主题配置文件数组;
   }
-  //初始化界面是异步的,所以用正在初始化这个变量保存状态,如果初始化还没有完成就不继续了
-  async 初始化界面() {
-    if (this.正在初始化) {
-      return;
-    }
-    let el = document.getElementById("themeEditorColorPlate");
-    el ? el.remove() : null;
-    this.正在初始化 = true;
-    let _path= `/plugins/themeEditor/source`
-    await import ( _path+'/init.js');
-    await (await import ( _path+'/UI/docks.js')).init();
-  }
+
   获取标记字符串(action) {
     if (action == "addThemeProducts") {
       let 标记字符串 = btoa(
