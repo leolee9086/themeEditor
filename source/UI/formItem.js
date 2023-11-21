@@ -1,4 +1,5 @@
 import { plugin, clientApi } from "../asyncModules.js";
+import { batchSetAttribute } from "../utils/DOMAttributes.js";
 
 export class FormItem {
     constructor(Item, container, cb, destroyCb) {

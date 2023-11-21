@@ -4,6 +4,45 @@ import { 获取当前主题文件夹URL } from "../utils/theme.js";
 import path from '../polyfills/path.js'
 import { batchSetAttribute } from "../utils/DOMAttributes.js";
 import { isColor } from "../utils/cssHelper.js";
+async function 复制默认公共配置文件() {
+  let 默认配置文件夹内容 = await 思源工作空间.readDir(
+    path.join("data", "plugins", "themeEditor", "sampleConfigs")
+  )
+  console.log(默认配置文件夹内容)
+  默认配置文件夹内容.forEach(
+    async(配置项目)=>{
+      if(配置项目.isDir){
+        return
+      }
+      let 目标文件路径 =       path.join(
+        "data",
+        "storage",
+        "petal",
+        "themeEditor",
+        "commonConfigs",
+        配置项目.name
+      )
+      if(await 思源工作空间.exists(目标文件路径)){
+        return
+      }
+      let 默认配置文件内容 = await 思源工作空间.readFile(
+        path.join("data", "plugins", "themeEditor", "sampleConfigs",配置项目.name)
+      );
+      await 思源工作空间.writeFile(
+        默认配置文件内容,
+        path.join(
+          "data",
+          "storage",
+          "petal",
+          "themeEditor",
+          "commonConfigs",
+          配置项目.name
+        )
+      );
+    }
+  )
+}
+await 复制默认公共配置文件()
 export const 初始化插件数据=async()=>{
     plugin.data = {};
     await 思源工作空间.mkdir(plugin.dataPath);

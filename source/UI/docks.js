@@ -6,6 +6,7 @@ import {
   绑定dock事件
 } from "./bind.js"
 import dock面板元素内容 from './html.js'
+import { 生成css } from "../utils/cssBuilder.js";
 let Pickr
 export const init = async () => {
   plugin.dock面板元素.innerHTML = dock面板元素内容
@@ -59,7 +60,7 @@ export function 生成设置条目(设置内容, 设置类型) {
         item,
         plugin.dock面板元素.querySelector(".config__tab-container"),
         () => {
-          plugin.生成css();
+          生成css();
         },
         () => {
           let el = document.getElementById("themeEditorColorPlate");

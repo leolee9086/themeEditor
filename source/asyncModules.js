@@ -1,4 +1,4 @@
-import kernelApi from '../polyfills/kernelApi.js';
+import kernelApi from './polyfills/kernelApi.js';
 let pluginName  = import.meta.resolve('../').split('/').filter(item=>{return item}).pop()
 const plugin = siyuan.ws.app.plugins.find(
     plugin => {

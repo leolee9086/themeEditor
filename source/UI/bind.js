@@ -5,6 +5,7 @@ import path from "../polyfills/path.js"
 import { download } from "../utils/files.js";
 import { 保存 } from "../utils/files.js";
 import { 生成css代码片段,移除代码片段 } from "../utils/snippets.js";
+import { 生成css } from "../utils/cssBuilder.js";
 export async function 绑定dock事件() {
   await 绑定主题配置选择()
   await 绑定公共配置选择()
@@ -170,7 +171,7 @@ export function 绑定真实过滤开关() {
     //console.log(开关.checked);
     真实过滤 = 开关.checked ? true : false;
 
-    plugin.生成css();
+    生成css();
   };
 }
 function 绑定配置产物上传() {
@@ -342,7 +343,7 @@ function 绑定搜索过滤() {
       !flag
         ? formItemEl.classList.add("fn__none")
         : formItemEl.classList.remove("fn__none");
-      真实过滤 ? plugin.生成css() : null;
+      真实过滤 ? 生成css() : null;
     });
   };
 }
@@ -363,7 +364,7 @@ function 绑定分组过滤() {
     plugin.currentGroup = selector.value;
     plugin.过滤显示({ key: "group", value: selector.value });
     绑定次级分组过滤();
-    真实过滤 ? plugin.生成css() : null;
+    真实过滤 ? 生成css() : null;
   };
   selector.addEventListener("change", searchCurrent);
   searchCurrent();
@@ -404,7 +405,7 @@ function 绑定次级分组过滤() {
   });
   let searchCurrent = () => {
     plugin.过滤显示({ key: "subGroup", value: selector.value });
-    真实过滤 ? plugin.生成css() : null;
+    真实过滤 ?生成css() : null;
   };
   selector.addEventListener("change", searchCurrent);
   searchCurrent();
@@ -429,7 +430,7 @@ function 绑定选择器过滤() {
       selector.value
     ) });
 
-    真实过滤 ? plugin.生成css() : null;
+    真实过滤 ? 生成css() : null;
   };
   selector.addEventListener("change", searchCurrent);
   searchCurrent();
