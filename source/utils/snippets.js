@@ -81,13 +81,13 @@ export  async function 生成css代码片段(标记字符串, css内容, 类型,
     return 元素;
   }
  export async function 移除代码片段(标记字符串) {
-    let 现有代码片段 = await 核心api.getSnippet({ type: "all", enabled: 2 });
+    let 现有代码片段 = await kernelApi.getSnippet({ type: "all", enabled: 2 });
     let 存在元素索引 = 现有代码片段.snippets.findIndex((item) =>
       item.content.startsWith(`/*${标记字符串}*/`)
     );
     if (存在元素索引 >= 0) {
       现有代码片段.snippets.splice(存在元素索引, 1);
-      await 核心api.setSnippet(现有代码片段);
+      await kernelApi.setSnippet(现有代码片段);
       window.location.reload();
     }
   }

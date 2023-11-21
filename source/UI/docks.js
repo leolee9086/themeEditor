@@ -1,6 +1,7 @@
 import { plugin, clientApi } from "../asyncModules.js";
 import { 获取配置文件内容 ,合并主题配置} from "../data/index.js";
 import { FormItem } from "./formItem.js"; 
+import { testselector } from "../utils/cssHelper.js";
 import {
   绑定dock事件
 } from "./bind.js"
@@ -52,7 +53,6 @@ async function 生成通用设置条目() {
 }
 export function 生成设置条目(设置内容, 设置类型) {
   (plugin.groups = []), (plugin.subGroups = []);
-
   设置内容.forEach((item) => {
     try {
       let formItem = new FormItem(

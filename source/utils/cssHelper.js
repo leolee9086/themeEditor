@@ -100,3 +100,16 @@ export function isColor(value) {
         } catch (e) { }
     }
 }
+export function testselector(selector) {
+  if (selector === ":root") {
+    return;
+  }
+  let tempstyle = window.document.createElement("style");
+  tempstyle.innerHTML =
+    selector + "{border:dashed 2px blue;background-color:yellow}";
+  tempstyle.setAttribute("id", "tempstyle");
+  document.head.appendChild(tempstyle);
+  setTimeout(() => {
+    tempstyle.remove();
+  }, 1000);
+}
