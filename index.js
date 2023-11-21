@@ -1,5 +1,6 @@
 const { Plugin } = require("siyuan");
 const clientApi = require("siyuan");
+globalThis[Symbol.for(`clientApi`)]=globalThis[Symbol.for(`clientApi`)]||clientApi
 let Pickr;
 let path;
 let 思源工作空间;
@@ -7,8 +8,10 @@ let importDep;
 let consoleError;
 let 核心api;
 let 真实过滤;
+let plugin
 class themeEditor extends Plugin {
   onload() {
+    plugin=this
     this.selfURL = `/plugins/${this.constructor.name}`;
     this.dataPath = `/data/storage/petal/${this.constructor.name}`;
     //用来存储最后的选择
@@ -32,18 +35,21 @@ class themeEditor extends Plugin {
     //初始化界面和数据
     this.初始化();
     this.监听当前主题变化();
-    注册图标({
-      id: "iconThemeEditor",
-      content: `
-      <path d="M8.997 13.985c.01 1.104-.88 2.008-1.986 2.015-1.105.009-2.005-.88-2.011-1.984-.01-1.105.879-2.005 1.982-2.016 1.106-.007 2.009.883 2.015 1.985zm-.978-3.986c-1.104.008-2.008-.88-2.015-1.987-.009-1.103.877-2.004 1.984-2.011 1.102-.01 2.008.877 2.012 1.982.012 1.107-.88 2.006-1.981 2.016zm7.981-4.014c.004 1.102-.881 2.008-1.985 2.015-1.106.01-2.008-.879-2.015-1.983-.011-1.106.878-2.006 1.985-2.015 1.101-.006 2.005.881 2.015 1.983zm-12 15.847c4.587.38 2.944-4.492 7.188-4.537l1.838 1.534c.458 5.537-6.315 6.772-9.026 3.003zm14.065-7.115c1.427-2.239 5.846-9.748 5.846-9.748.353-.623-.429-1.273-.975-.813 0 0-6.572 5.714-8.511 7.525-1.532 1.432-1.539 2.086-2.035 4.447l1.68 1.4c2.227-.915 2.868-1.04 3.995-2.811zm-12.622 4.806c-2.084-1.82-3.42-4.479-3.443-7.447-.044-5.51 4.406-10.03 9.92-10.075 3.838-.021 6.479 1.905 6.496 3.447l1.663-1.456c-1.01-2.223-4.182-4.045-8.176-3.992-6.623.055-11.955 5.466-11.903 12.092.023 2.912 1.083 5.57 2.823 7.635.958.492 2.123.329 2.62-.204zm12.797-1.906c1.059 1.97-1.351 3.37-3.545 3.992-.304.912-.803 1.721-1.374 2.311 5.255-.591 9.061-4.304 6.266-7.889-.459.685-.897 1.197-1.347 1.586z"/>        `,
-      viewBox: "0 0 24 24",
-    });
-    注册图标({
-      id: "iconThemeEditorSave",
-      content: `
-      <path d="M15.004 3h2.996v5h-2.996v-5zm8.996 1v20h-24v-24h20l4 4zm-19 5h14v-7h-14v7zm16 4h-18v9h18v-9zm-2 2h-14v1h14v-1zm0 2h-14v1h14v-1zm0 2h-14v1h14v-1z"/>        `,
-      viewBox: "0 0 24 24",
-    });
+    this.注册图标()
+  }
+  注册图标(){
+    this.addIcons(
+      `<symbol id="iconThemeEditor" viewBox="0 0 24 24">
+ 
+      <path d="M8.997 13.985c.01 1.104-.88 2.008-1.986 2.015-1.105.009-2.005-.88-2.011-1.984-.01-1.105.879-2.005 1.982-2.016 1.106-.007 2.009.883 2.015 1.985zm-.978-3.986c-1.104.008-2.008-.88-2.015-1.987-.009-1.103.877-2.004 1.984-2.011 1.102-.01 2.008.877 2.012 1.982.012 1.107-.88 2.006-1.981 2.016zm7.981-4.014c.004 1.102-.881 2.008-1.985 2.015-1.106.01-2.008-.879-2.015-1.983-.011-1.106.878-2.006 1.985-2.015 1.101-.006 2.005.881 2.015 1.983zm-12 15.847c4.587.38 2.944-4.492 7.188-4.537l1.838 1.534c.458 5.537-6.315 6.772-9.026 3.003zm14.065-7.115c1.427-2.239 5.846-9.748 5.846-9.748.353-.623-.429-1.273-.975-.813 0 0-6.572 5.714-8.511 7.525-1.532 1.432-1.539 2.086-2.035 4.447l1.68 1.4c2.227-.915 2.868-1.04 3.995-2.811zm-12.622 4.806c-2.084-1.82-3.42-4.479-3.443-7.447-.044-5.51 4.406-10.03 9.92-10.075 3.838-.021 6.479 1.905 6.496 3.447l1.663-1.456c-1.01-2.223-4.182-4.045-8.176-3.992-6.623.055-11.955 5.466-11.903 12.092.023 2.912 1.083 5.57 2.823 7.635.958.492 2.123.329 2.62-.204zm12.797-1.906c1.059 1.97-1.351 3.37-3.545 3.992-.304.912-.803 1.721-1.374 2.311 5.255-.591 9.061-4.304 6.266-7.889-.459.685-.897 1.197-1.347 1.586z"/>        
+      </symbol>
+    `,
+    )
+    this.addIcons(
+   `<symbol id="iconThemeEditorSave" viewBox="0 0 24 24">
+      <path d="M15.004 3h2.996v5h-2.996v-5zm8.996 1v20h-24v-24h20l4 4zm-19 5h14v-7h-14v7zm16 4h-18v9h18v-9zm-2 2h-14v1h14v-1zm0 2h-14v1h14v-1zm0 2h-14v1h14v-1z"/>   
+      </symbol>
+      `);
   }
   创建配置Dock() {
     let that = this;
@@ -60,7 +66,8 @@ class themeEditor extends Plugin {
       },
       type: "config",
       init() {
-        this.element.innerHTML = `
+        //this.element.innerHTML=''
+        /*this.element.innerHTML = `
         <div class="block__icons">
           <div class="block__logo">
               <svg><use xlink:href="#iconThemeEditor"></use></svg>
@@ -189,8 +196,9 @@ class themeEditor extends Plugin {
         </div>
         <div class="fn__flex-1  theme-editor__custom-dock config__tab-container" style='max-height:calc(100% - 210px);background-color:var(--b3-theme-background);'> 
         </div>
-        `;
+        `;*/
         that.dock面板元素 = this.element;
+        that.eventBus.emit('main-dock-ready')
         that.初始化();
         consoleError = (...args) => {
           console.error(...args);
@@ -420,18 +428,17 @@ class themeEditor extends Plugin {
     el ? el.remove() : null;
 
     this.正在初始化 = true;
-    let _path= `/plugins/themeEditor/source/init.js`
-    await import ( _path);
+    let _path= `/plugins/themeEditor/source`
+    await import ( _path+'/init.js');
+    await import ( _path+'/UI/docks.js');
 
-    await this.创建配置面板();
+    //await this.创建配置面板();
     await this.绑定主题配置选择();
     await this.绑定公共配置选择();
     await this.绑定配置产物选择();
-
     await this.绑定公共配置上传();
     await this.绑定配置产物上传();
     await this.绑定下载();
-
     await this.绑定真实过滤开关();
     await this.绑定配置文件类型过滤();
     await this.绑定分组过滤();
@@ -441,7 +448,6 @@ class themeEditor extends Plugin {
     await this.绑定刷新();
     await this.绑定保存();
     await this.绑定代码片段();
-
     await this.绑定编辑区显示();
   }
   获取标记字符串(action) {
@@ -1522,7 +1528,7 @@ class FormIpputer {
           themeEditorColorPlate.setAttribute("id", "themeEditorColorPlate");
           document.body.appendChild(themeEditorColorPlate);
         }
-        let pickr = new Pickr({
+        let pickr = new plugin.Pickr({
           container: themeEditorColorPlate,
           el: element,
           theme: "classic",
