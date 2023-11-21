@@ -10,6 +10,7 @@
   "description": {
     "default": "this is a plugin to modify or create theme",
     "zh_CN": "这是一个用于编辑或者创建主题的插件,还有个悬浮球用来修改一下块的颜色"
+
   },
   "readme": {
     "default": "README.md",
