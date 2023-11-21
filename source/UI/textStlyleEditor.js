@@ -37,7 +37,7 @@ style="pointer-events:auto;overflow:hidden;z-index:5">
             width: '400px',
             height: 'auto',
             transparent: true,
-            disableClose: true,
+            disableClose: false,
             disableAnimation: false
         }
     )
@@ -85,7 +85,7 @@ style="pointer-events:auto;overflow:hidden;z-index:5">
     let config = { attributes: true, attributeFilter: ['style'] };
     // 开始观察
     observer.observe(container, config);
-    const app = initVueApp('/plugins/themeEditor/source/UI/components/app.vue', 'aaa', { plugin: plugin }, 'D:/极客家/data/plugins/themeEditor/source/UI/components', { elements: blockElements })
+    const app = initVueApp('/plugins/themeEditor/source/UI/components/app.vue', 'aaa', { plugin: plugin }, Constants.devPath, { elements: blockElements })
     app.mount(dialog.element.querySelector(".styleEditor"))
     plugin.styleDialog = dialog
 }

@@ -4,17 +4,17 @@
     <CircleButtonGroupAutoCompute @mouseleave="showMenu = false" v-if="showMenu" @mouseup="handleCircleButtonGroupMouseUp"
       :buttons="buttons" :origin="{ x: 0, y: 0 }" :position="{ x: position.x - 500, y: position.y - 500 }"
       :innerRadius="100" :outerRadius="500" v-show="!dragging" />
-
     <CircleButtonGroupAutoCompute @mouseleave="showToolsMenu = false" v-if="showToolsMenu"
       @mouseup="handleCircleButtonGroupMouseUp" :buttons="toolButtons" :origin="{ x: 0, y: 0 }"
       :position="{ x: position.x - 600, y: position.y - 600 }" :innerRadius="200" :outerRadius="600" v-show="!dragging" />
-    <div class="floating-ball-cursor" 
-    @mousedown.left="handleMouseDown" 
-    @mouseup="handleMouseUp" 
-    @mousemove="drag"
-    @mouseover="showMenu=true"
-      @mousedown.right="showToolsMenu = !showToolsMenu"
-      :style="`position:fixed;left:${position.x - 25}px;top:${position.y - 25}px`">
+    <div class="floating-ball-cursor" ref='cursor' @mousedown.left="handleMouseDown" @mouseup="handleMouseUp" @mousemove="drag"
+      @mouseover="showMenu = true"     @dblclick="handleDoubleClick"
+      @click="handleClick"
+      @contextmenu.prevent="handleRightClick"
+      :style=cursorStyle>
+      <svg style="max-width:66%;max-height:66%;">
+        <use xlink:href="#iconThemeEditor"></use>
+      </svg>
     </div>
   </div>
 </template>
@@ -34,38 +34,66 @@ export default {
   },
   data() {
     return {
-      currentColorScale:'OrRd',
+      currentColor:'',
+      currentBackground:"",
+      currentBackgroundColor:"",
+      lastRightClickTime: 0,
+      isDoubleClick: false,
+      doubleClickTimeout: null,
+      currentColorScale: 'OrRd',
       showToolsMenu: false,
       showMenu: false,
       dragging: false,
       position: { x: 300, y: 300 },
-      toolButtons: Array.from({ length: 12 }, (_, i) =>
-        keys.slice(i * groupSize, (i + 1) * groupSize).map(item => {
+      toolButtons: Array.from({ length: 12 }, (_, i) => {
+        return keys.slice(i * groupSize, (i + 1) * groupSize).map(item => {
           // 创建一个颜色比例尺
           let colors = chroma.scale(item).colors(5); // 生成5个颜色
           return {
             //      label: item,
-            fill: 'red',
-            click: () => { 
-              this.currentColorScale=item;
-              this.showToolsMenu=false;
-              setTimeout(()=>{this.showMenu=true},300) 
+            fill: colors[0],
+            click: (event) => {
+              if (event.evt.button === 0) {
+                this.currentColorScale = item;
+                this.showToolsMenu = false;
+                setTimeout(() => { this.showMenu = true }, 300)
+
+              }
             },
-            //shape: 'circle',
+            // shape: 'circle',
             // 创建一个径向渐变
+            contextmenu: () => {
+              // 创建一个颜色渐变
+              let gradient = chroma.scale(item).mode('lch').colors(5);
+              // 将渐变转换为 CSS 渐变
+              let cssGradient = `linear-gradient(${gradient[0]}, ${gradient[1]}, ${gradient[2]}, ${gradient[3]}, ${gradient[4]})`;              // 发出事件
+              this.currentBackground=cssGradient
+              eventBus.emit('css-props-change', { background: cssGradient });
+            },
             fillRadialGradientColorStops: [0, colors[0], 0.25, colors[1], 0.5, colors[2], 0.75, colors[3], 1, colors[4]],
             //      image:"https://img.jkbaby.cn/uploadimg/image/20210817/20210817151800_24414.jpg"
           };
-        })
+        }).sort((a, b) => {
+          const colorA = a.fill;
+          const colorB = b.fill;
+          return chroma.distance(colorA, colorB);
+        });
+      }
       ),
-     
       dragTimeout: null,
-
     }
   },
-  computed:{
-
-    buttons(){return Array.from({ length: 12 }, (_, groupIndex) => {
+  computed: {
+    cursorStyle(){
+      return `position:fixed;
+      left:${this.position.x - 25}px;
+      top:${this.position.y - 25}px;
+      color:${this.currentColor};
+      background:${this.currentBackground};
+      background-color:${this.currentBackgroundColor}`
+    },
+    buttons() {
+      return Array.from({ length: 12 }, (_, groupIndex) => {
         // 创建一个颜色比例尺
         console.log(this.currentColorScale)
         let colorScale = chroma.scale(this.currentColorScale).colors(12);
@@ -80,14 +108,62 @@ export default {
           return {
             label: ``,
             color: color,
-            click: () => eventBus.emit('css-props-change', { color }),
-            contextmenu: () => eventBus.emit('css-props-change', { backgroundColor: color })
+            click: (event) => { 
+              if(event.evt.button === 0){  
+          
+              this.currentColor=color
+
+              eventBus.emit('css-props-change', { color }) ;
+              }
+            },
+            contextmenu: (event) => { 
+               event.evt.preventDefault();
+               this.currentBackground=""
+ 
+               this.currentBackgroundColor=color
+               eventBus.emit('css-props-change', { backgroundColor: color }) 
+              }
           };
         });
       })
     },
   },
   methods: {
+    handleClick(){
+      eventBus.emit('css-props-change', { backgroundColor: this.$refs.cursor.style.backgroundColor }) 
+      eventBus.emit('css-props-change', { background: this.$refs.cursor.style.background }) 
+      eventBus.emit('css-props-change', { color: this.$refs.cursor.style.color }) 
+
+    },
+    handleRightClick() {
+    const now = Date.now();
+    const timeDiff = now - this.lastRightClickTime;
+    this.lastRightClickTime = now;
+
+    if (timeDiff < 500) { // 500ms 内的连续右键点击会被认为是右键双击
+      this.isDoubleClick = true;
+      console.log('Right double click!');
+      // 如果已经存在一个定时器，先清除它
+      if (this.doubleClickTimeout) {
+        clearTimeout(this.doubleClickTimeout);
+      }
+      // 设置一个新的定时器，在500ms后重置 isDoubleClick 状态
+      this.doubleClickTimeout = setTimeout(() => {
+        this.isDoubleClick = false;
+      }, 500);
+    } else {
+      this.isDoubleClick = false;
+    }
+
+    // 如果不是双击事件，执行单击事件的逻辑
+    if (!this.isDoubleClick) {
+      this.showToolsMenu = !this.showToolsMenu;
+    }
+  },
+
+    handleDoubleClick(){
+      eventBus.emit('dialog-open-backgroundEditor',{});
+    },
     handleMouseDown(event) {
       if (event.target.closest('.floating-ball')) {
         this.dragTimeout = setTimeout(() => {
@@ -105,10 +181,10 @@ export default {
     },
     handleCircleButtonGroupMouseUp() {
       setTimeout(() => this.showMenu = false, 100) // 短暂延时后隐藏环形菜单
-
     },
     dragStart(event) {
       if (event.target.closest('.floating-ball')) {
+
         this.dragging = true;
         this.position = { x: event.clientX, y: event.clientY };
         window.addEventListener('mousemove', this.drag)
@@ -120,7 +196,6 @@ export default {
       const ball = this.$el;
       const dx = event.clientX - this.position.x;
       const dy = event.clientY - this.position.y;
-
       const left = parseInt(ball.style.left || 0);
       const top = parseInt(ball.style.top || 0);
       this.position = { x: this.position.x + dx, y: this.position.y + dy };
@@ -145,9 +220,8 @@ export default {
   z-index: 300;
   pointer-events: auto;
 }
+
 .floating-ball-cursor {
-  background: radial-gradient(circle at 50% 50%, #FF9A8C 0%, #FF6A88 50%, #FF99AC 100%),
-    radial-gradient(circle at 30% 30%, #FF6A88 0%, #FF9A8C 50%, #FF99AC 100%);
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
   ;
   pointer-events: auto;
@@ -156,7 +230,13 @@ export default {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid var(--b3-theme-secondary)
 }
+
 #floating-ball-root {
   z-index: 300;
   pointer-events: auto;

@@ -1,5 +1,6 @@
 import { clientApi, plugin } from "../asyncModules.js"
 import { initVueApp } from "./utils/componentsLoader.js"
+import { Constants } from "../asyncModules.js"
 import "./blockHandler.js"
 export const openStyleDialog = (blockElements) => {
     if (plugin.backgroundStyleDialog) {
@@ -37,7 +38,7 @@ style="pointer-events:auto;z-index:5;max-height:80vh">
             width: '400px',
             height: 'auto',
             transparent: true,
-            disableClose: true,
+            disableClose: false,
             disableAnimation: false
         }
     )
@@ -63,7 +64,7 @@ style="pointer-events:auto;z-index:5;max-height:80vh">
     
     `)
     dialog.element.querySelector('[data-type="clear-style"]').addEventListener('click', () => {
-        plugin.eventBus.emit('clear-style', { props: 'all' })
+        plugin.eventBus.emit('clear-style', { props: 'background' })
     })
 
     let container = dialog.element.querySelector(".b3-dialog__container");
@@ -85,7 +86,7 @@ style="pointer-events:auto;z-index:5;max-height:80vh">
     let config = { attributes: true, attributeFilter: ['style'] };
     // 开始观察
     observer.observe(container, config);
-    const app = initVueApp('/plugins/themeEditor/source/UI/components/backgroundEditorUI.vue', 'aaa', { plugin: plugin }, 'D:/极客家/data/plugins/themeEditor/source/UI/components', { elements: blockElements })
+    const app = initVueApp('/plugins/themeEditor/source/UI/components/backgroundEditorUI.vue', 'aaa', { plugin: plugin }, Constants.devPath, { elements: blockElements })
     app.mount(dialog.element.querySelector(".styleEditor"))
     plugin.backgroundStyleDialog = dialog
 }
@@ -97,7 +98,7 @@ floatingBallContainer.id = 'floating-ball-container';
 document.body.insertAdjacentElement('beforeend', floatingBallContainer);
 
 // 然后我们可以将Vue应用挂载到这个新的元素上
-const app = initVueApp('/plugins/themeEditor/source/UI/components/floatingball.vue', 'aaa', { plugin: plugin }, 'D:/极客家/data/plugins/themeEditor/source/UI/components', {  });
+const app = initVueApp('/plugins/themeEditor/source/UI/components/floatingball-color.vue', 'aaa', { plugin: plugin }, Constants.devPath, {});
 app.mount('#floating-ball-container');
 
 
