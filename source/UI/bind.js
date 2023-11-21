@@ -1,6 +1,12 @@
 import { plugin } from "../asyncModules.js";
 import { 获取当前主题文件夹URL } from "../utils/theme.js";
+import {default as 思源工作空间} from '../polyfills/fs.js'
 import path from "../polyfills/path.js"
+export async function 绑定dock事件(){
+    await 绑定主题配置选择()
+    await 绑定公共配置选择()
+    await 绑定配置产物选择()
+}
 export async function 绑定主题配置选择() {
     let selector = plugin.dock面板元素.querySelector(".configFileTheme");
     selector.innerHTML = "";
@@ -18,7 +24,7 @@ export async function 绑定主题配置选择() {
         plugin.lastValues.lastThemeConfigFilePath = path.join(
             "conf",
             获取当前主题文件夹URL(),
-            this.lastValues.lastThemeConfigFilePath
+            plugin.lastValues.lastThemeConfigFilePath
         );
         await plugin.保存();
         await plugin.初始化();
@@ -52,3 +58,45 @@ export async function 绑定公共配置选择() {
         await plugin.初始化();
     };
 }
+export async function 绑定配置产物选择() {
+    let selector1 = plugin.dock面板元素.querySelector(".puductTheme");
+    let selector2 = plugin.dock面板元素.querySelector(".puductCommon");
+    selector1.innerHTML = "";
+    selector2.innerHTML = "";
+    let 主题产物数组 = await 思源工作空间.readDir(
+      plugin.lastValues.themeProductsPath
+    );
+    let 公共产物数组 = await 思源工作空间.readDir(
+      plugin.lastValues.commonProductsPath
+    );
+    主题产物数组.forEach((主题产物) => {
+      selector1.innerHTML += `<option value='${主题产物.name}' ${
+        主题产物.name == plugin.lastValues.themeProductName ? "selected" : ""
+      }>${主题产物.name}</option>`;
+    });
+    公共产物数组.forEach((公共产物) => {
+      selector2.innerHTML += `<option 
+      value='${公共产物.name}' 
+      ${公共产物.name == plugin.lastValues.commonProductName ? "selected" : ""}
+      >${公共产物.name}</option>`;
+    });
+    let 读取配置产物 = async (e) => {
+      let name = e.currentTarget.value;
+      let type = e.currentTarget.classList.contains("puductTheme")
+        ? "theme"
+        : "common";
+      let dirname =
+        type === "theme"
+          ? plugin.lastValues.themeProductsPath
+          : plugin.lastValues.commonProductsPath;
+      let key = type === "theme" ? "themesCustomCss" : "commonCustomCss";
+      let _path = path.join(dirname, name);
+      let cssContent = await 思源工作空间.readFile(_path);
+      plugin.lastValues[key] = cssContent;
+      key = type === "theme" ? "themeProductName" : "commonProductName";
+      plugin.lastValues[key] = name;
+      await plugin.保存();
+      await plugin.初始化();
+    };
+    selector2.onchange = selector1.onchange = 读取配置产物;
+  }

@@ -1,6 +1,6 @@
 import { plugin ,clientApi} from "../asyncModules.js";
 import {
-    绑定主题配置选择, 绑定公共配置选择
+    绑定dock事件
 } from "./bind.js"
 import dock面板元素内容 from './html.js'
 let Pickr
@@ -15,8 +15,7 @@ export async function 创建配置面板() {
     plugin.Pickr=Pickr
     plugin.dock面板元素.querySelector(".config__tab-container").innerHTML = "";
     plugin.formItems = [];
+    await 绑定dock事件()
     await plugin.生成主题设置条目();
     await plugin.生成通用设置条目();
-    await 绑定主题配置选择()
-    await 绑定公共配置选择()
 }

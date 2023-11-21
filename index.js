@@ -112,7 +112,6 @@ class themeEditor extends Plugin {
     await 思源工作空间.mkdir(path.join(this.dataPath, "commonConfigs"));
     await 思源工作空间.mkdir(path.join(this.dataPath, "commonProducts"));
     await 思源工作空间.mkdir(path.join(this.dataPath, "themeProducts"));
-    await this.复制默认公共配置文件();
     await this.获取当前公共配置文件数组();
     await this.获取当前主题配置文件数组();
 
@@ -284,8 +283,6 @@ class themeEditor extends Plugin {
     let _path= `/plugins/themeEditor/source`
     await import ( _path+'/init.js');
     await (await import ( _path+'/UI/docks.js')).init();
-    //await this.绑定公共配置选择();
-    await this.绑定配置产物选择();
     await this.绑定公共配置上传();
     await this.绑定配置产物上传();
     await this.绑定下载();
@@ -626,117 +623,7 @@ class themeEditor extends Plugin {
       await this.初始化();
     };
   }
-  async 绑定配置产物选择() {
-    let selector1 = this.dock面板元素.querySelector(".puductTheme");
-    let selector2 = this.dock面板元素.querySelector(".puductCommon");
 
-    selector1.innerHTML = "";
-    selector2.innerHTML = "";
-    let 主题产物数组 = await 思源工作空间.readDir(
-      this.lastValues.themeProductsPath
-    );
-    let 公共产物数组 = await 思源工作空间.readDir(
-      this.lastValues.commonProductsPath
-    );
-    主题产物数组.forEach((主题产物) => {
-      selector1.innerHTML += `<option value='${主题产物.name}' ${
-        主题产物.name == this.lastValues.themeProductName ? "selected" : ""
-      }>${主题产物.name}</option>`;
-    });
-    公共产物数组.forEach((公共产物) => {
-      selector2.innerHTML += `<option 
-      value='${公共产物.name}' 
-      ${公共产物.name == this.lastValues.commonProductName ? "selected" : ""}
-      >${公共产物.name}</option>`;
-    });
-    let 读取配置产物 = async (e) => {
-      let name = e.currentTarget.value;
-      let type = e.currentTarget.classList.contains("puductTheme")
-        ? "theme"
-        : "common";
-      let dirname =
-        type === "theme"
-          ? this.lastValues.themeProductsPath
-          : this.lastValues.commonProductsPath;
-      let key = type === "theme" ? "themesCustomCss" : "commonCustomCss";
-      let _path = path.join(dirname, name);
-      let cssContent = await 思源工作空间.readFile(_path);
-      this.lastValues[key] = cssContent;
-      key = type === "theme" ? "themeProductName" : "commonProductName";
-      this.lastValues[key] = name;
-
-      await this.保存();
-      await this.初始化();
-    };
-    selector2.onchange = selector1.onchange = 读取配置产物;
-  }
-  async 绑定公共配置选择() {
-    let selector = this.dock面板元素.querySelector(".configFileCommon");
-    selector.innerHTML = "";
-    let 公共配置文件数组 = await this.获取当前公共配置文件数组();
-    if (公共配置文件数组) {
-      for (let i = 0, length = 公共配置文件数组.length; i < length; i++) {
-        if (公共配置文件数组[i] == this.lastValues.lastCommonfigFileName) {
-          selector.innerHTML += `<option value='${i}' selected>${公共配置文件数组[i]}</option>`;
-          selector.value = i;
-        } else {
-          selector.innerHTML += `<option value='${i}'>${公共配置文件数组[i]}</option>`;
-        }
-      }
-    } else {
-      selector.innerHTML += `<option value='-1'>当前没有公共配置文件,正在重新生成</option>`;
-      await this.复制默认公共配置文件();
-    }
-    selector.onchange = async () => {
-      this.lastValues.lastCommonfigFileName = 公共配置文件数组[selector.value];
-      this.lastValues.lastCommonfigFilePath = path.join(
-        this.dataPath,
-        "commonConfigs",
-        this.lastValues.lastCommonfigFileName
-      );
-      await this.保存();
-      await this.初始化();
-    };
-  }
-
-  async 复制默认公共配置文件() {
-    let 默认配置文件夹内容 = await 思源工作空间.readDir(
-      path.join("data", "plugins", "themeEditor", "sampleConfigs")
-    )
-    console.log(默认配置文件夹内容)
-    默认配置文件夹内容.forEach(
-      async(配置项目)=>{
-        if(配置项目.isDir){
-          return
-        }
-        let 目标文件路径 =       path.join(
-          "data",
-          "storage",
-          "petal",
-          "themeEditor",
-          "commonConfigs",
-          配置项目.name
-        )
-        if(await 思源工作空间.exists(目标文件路径)){
-          return
-        }
-        let 默认配置文件内容 = await 思源工作空间.readFile(
-          path.join("data", "plugins", "themeEditor", "sampleConfigs",配置项目.name)
-        );
-        await 思源工作空间.writeFile(
-          默认配置文件内容,
-          path.join(
-            "data",
-            "storage",
-            "petal",
-            "themeEditor",
-            "commonConfigs",
-            配置项目.name
-          )
-        );
-      }
-    )
-  }
   绑定分组过滤() {
     let selector = this.dock面板元素.querySelector(".b3-filter-group");
 
