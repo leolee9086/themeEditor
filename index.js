@@ -191,7 +191,6 @@ class themeEditor extends Plugin {
         </div>
         `;
         that.dock面板元素 = this.element;
-        //console.log(this, that);
         that.初始化();
         consoleError = (...args) => {
           console.error(...args);
@@ -244,7 +243,6 @@ class themeEditor extends Plugin {
     //await importDep("./polyfills/genKernelApi.js");
     核心api = (await importDep("./polyfills/kernelApi.js"))["default"];
     思源工作空间 = (await importDep("./polyfills/fs.js"))["default"];
-   
   }
   async 初始化数据() {
     this.data = {};
@@ -422,7 +420,7 @@ class themeEditor extends Plugin {
     el ? el.remove() : null;
 
     this.正在初始化 = true;
-    this.初始化设置css();
+    await this.初始化设置css();
     await this.创建配置面板();
     await this.绑定主题配置选择();
     await this.绑定公共配置选择();
@@ -545,28 +543,8 @@ class themeEditor extends Plugin {
     };
   }
   初始化设置css() {
-    document.head.querySelectorAll(".themeEditorStyle").forEach((oldStyle) => {
-      oldStyle.remove();
-    });
-    document.head.insertAdjacentHTML(
-      "beforeend",
-      `
-      <style id="themeEditorStyle-theme" class="themeEditorStyle" data-provider="theme"></style>
-
-    <style id="themeEditorStyle-common" class="themeEditorStyle" data-provider="common"></style>
-    `
-    );
-    let themeEditorStyles = document.head.querySelectorAll(".themeEditorStyle");
-
-    themeEditorStyles.forEach((themeEditorStyle) => {
-      themeEditorStyle.textContent = "";
-      if (themeEditorStyle.dataset.provider == "common") {
-        themeEditorStyle.textContent = this.lastValues.commonCustomCss;
-      } else {
-        themeEditorStyle.textContent = this.lastValues.themesCustomCss;
-      }
-      document.head.appendChild(themeEditorStyle);
-    });
+    let _path= `/plugins/themeEditor/source/init.js`
+    import ( _path);
   }
   绑定公共配置上传() {
     let 上传按钮 = this.dock面板元素.querySelector(
@@ -903,20 +881,6 @@ class themeEditor extends Plugin {
         );
       }
     )
-   /* let 默认配置文件内容 = await 思源工作空间.readFile(
-      path.join("data", "plugins", "themeEditor", "defaultConfig.js")
-    );
-    await 思源工作空间.writeFile(
-      默认配置文件内容,
-      path.join(
-        "data",
-        "storage",
-        "petal",
-        "themeEditor",
-        "commonConfigs",
-        "defaultConfig.js"
-      )
-    );*/
   }
   绑定分组过滤() {
     let selector = this.dock面板元素.querySelector(".b3-filter-group");
