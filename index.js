@@ -380,11 +380,6 @@ class themeEditor extends Plugin {
           this.dock面板元素.querySelector(".config__tab-container"),
           () => {
             this.生成css();
-            /*if (设置类型 == "common") {
-            this.lastValues.commonCustomCss = 计算css(设置内容, 设置类型);
-          } else {
-            this.lastValues.themesCustomCss = 计算css(设置内容, 设置类型);
-          }*/
           },
           () => {
             let el = document.getElementById("themeEditorColorPlate");
