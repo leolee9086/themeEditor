@@ -33,7 +33,6 @@ class themeEditor extends Plugin {
     this.系统字体列表 = []
     this.pickrs = []
     this.收藏的css渐变=[]
-
     this.groups = [];
     this.subGroups = [];
     this.selectors = [];

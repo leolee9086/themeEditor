@@ -57,9 +57,6 @@ style="pointer-events:auto;z-index:5;max-height:80vh">
         <svg><use xlink:href="#iconTrashcan"></use></svg>
     </span>
     <span class="fn__space"></span>
-    <span data-type="pin" class="block__icon block__icon--show b3-tooltips b3-tooltips__sw block__icon--active" aria-label="取消钉住">
-        <svg><use xlink:href="#iconPin"></use></svg>
-    </span> 
 </span>
     
     `)

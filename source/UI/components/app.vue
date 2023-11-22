@@ -7,6 +7,9 @@
             <fontSize :targets=elements></fontSize>
             <div class="cc-toolbar__divider"></div>
             <letterSpacing :targets=elements></letterSpacing>
+            <div class="cc-toolbar__divider"></div>
+
+            <fontWeight @change='update({fontWeight:$event})'></fontWeight>
     </div>
     <div class="cc-toolbar__divider__vertical"></div>
     <div class="fn__flex">
@@ -34,14 +37,18 @@ import verticalAlign from './fontStyleEditor/verticalAlign.vue'
 import textDecoration from './fontStyleEditor/textDecoration.vue'
 import DecorationStyle from './fontStyleEditor/decorationStyle.vue'
 import CssSizeInputter from './common/CssSizeInputter.vue'
+import fontWeight from './fontStyleEditor/fontWeight.vue'
+
 import eventBus from "eventBus"
 const lineHeight = ref('');  // 新增
 
 const { elements } = defineProps(['elements'])
 function updateLineHeight(value){
     lineHeight.value = value;
-
     eventBus.emit('css-props-change',{lineHeight:lineHeight.value}) 
+}
+function update(data){
+    eventBus.emit('css-props-change',data) 
 
 }
 </script>

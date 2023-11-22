@@ -70,7 +70,19 @@ eventBus.on('clear-style', (e) => {
             })
 
         });
-    
+    }
+    if(data.props==='font'){
+        plugin.blockElements&&plugin.blockElements.forEach(element => {
+            element.style.font = "";
+            element.style.color = "";
+            element.style.letterSpacing = "";
+            element.style.textDecoration = "";
+                kernelApi.setBlockAttrs({
+                id:element.getAttribute("data-node-id"),
+                attrs:{style:element.getAttribute("style")}
+            })
+
+        });
     }
 })
 eventBus.on('click-editorcontent', (e) => {

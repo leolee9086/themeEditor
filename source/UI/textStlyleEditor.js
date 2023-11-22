@@ -36,7 +36,7 @@ style="pointer-events:auto;overflow:hidden;z-index:5">
                     console.warn(e)
                 }
             },
-            width: '400px',
+            width: '521px',
             height: 'auto',
             transparent: true,
             disableClose: false,
@@ -56,16 +56,12 @@ style="pointer-events:auto;overflow:hidden;z-index:5">
     </span>
     <span data-type="clear-style" class="block__icon block__icon--show b3-tooltips b3-tooltips__sw" aria-label="清除样式">
         <svg><use xlink:href="#iconTrashcan"></use></svg>
-    </span>
-    <span class="fn__space"></span>
-    <span data-type="pin" class="block__icon block__icon--show b3-tooltips b3-tooltips__sw block__icon--active" aria-label="取消钉住">
-        <svg><use xlink:href="#iconPin"></use></svg>
-    </span> 
+    </span>  
 </span>
     
     `)
     dialog.element.querySelector('[data-type="clear-style"]').addEventListener('click', () => {
-        plugin.eventBus.emit('clear-style', { props: 'all' })
+        plugin.eventBus.emit('clear-style', { props: 'font' })
     })
 
     let container = dialog.element.querySelector(".b3-dialog__container");
