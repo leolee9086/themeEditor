@@ -12,5 +12,5 @@ export {plugin as plugin}
 export {kernelApi as kernelApi}
 export const Constants = {
    // devPath:siyuan.config.system.workspaceDir+`/data/plugins/${plugin.name}/source/UI/components`,
-   devPath:""
+   devPath:"D:/极客家/data/plugins/themeEditor/source"
 }

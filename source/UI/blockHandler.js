@@ -1,5 +1,6 @@
 
 import { kernelApi } from "../asyncModules.js";
+import { 计算zindex } from "./utils/zindex.js";
 //样式元素
 document.head.insertAdjacentHTML(
     "beforeEnd",
@@ -20,7 +21,6 @@ document.head.insertAdjacentHTML(
           right: -4px;
           box-shadow: 0 0 1px 1px var(--b3-theme-on-surface);
           box-sizing: border-box;
-          z-index:300
       }
       </style>`
   );
@@ -104,6 +104,7 @@ document.head.insertAdjacentHTML(
           块元素.insertBefore(抓手元素, 最后一个属性元素);
           //给抓手元素增加一个偏移,避免多层元素时,重叠
           抓手元素.style.left=`calc(100% - ${8*i}px)`
+          抓手元素.style.zIndex=计算zindex(".layout__resize")
           抓手元素.addEventListener("mousedown", () => {
             抓手元素.classList.add("active");
             开始缩放 = true;

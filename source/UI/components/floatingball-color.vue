@@ -1,17 +1,15 @@
 <template>
   <div class="floating-ball"
-    :style="`position:fixed;left:${position.x - 25}px;top:${position.y - 25}px;pointer-events: auto;`">
-    <CircleButtonGroupAutoCompute @mouseleave="showMenu = false" v-if="showMenu" @mouseup="handleCircleButtonGroupMouseUp"
-      :buttons="buttons" :origin="{ x: 0, y: 0 }" :position="{ x: position.x - 500, y: position.y - 500 }"
-      :innerRadius="100" :outerRadius="500" v-show="!dragging" />
-    <CircleButtonGroupAutoCompute @mouseleave="showToolsMenu = false" v-if="showToolsMenu"
+    :style="`position:fixed;left:${position.x - 25}px;top:${position.y - 25}px;pointer-events: auto;z-index:${zindex}`">
+    <CircleButtonGroupAutoCompute @mouseleave="showMenu = false" v-if="(!mouseLeaved) && showMenu"
+      @mouseup="handleCircleButtonGroupMouseUp" :buttons="buttons" :origin="{ x: 0, y: 0 }"
+      :position="{ x: position.x - 500, y: position.y - 500 }" :innerRadius="100" :outerRadius="500" v-show="!dragging" />
+    <CircleButtonGroupAutoCompute @mouseleave="showToolsMenu = false" v-if="(!mouseLeaved) && showToolsMenu"
       @mouseup="handleCircleButtonGroupMouseUp" :buttons="toolButtons" :origin="{ x: 0, y: 0 }"
       :position="{ x: position.x - 600, y: position.y - 600 }" :innerRadius="200" :outerRadius="600" v-show="!dragging" />
-    <div class="floating-ball-cursor" ref='cursor' @mousedown.left="handleMouseDown" @mouseup="handleMouseUp" @mousemove="drag"
-      @mouseover="showMenu = true"     @dblclick="handleDoubleClick"
-      @click="handleClick"
-      @contextmenu.prevent="handleRightClick"
-      :style=cursorStyle>
+    <div class="floating-ball-cursor" ref='cursor' @mousedown.left="handleMouseDown" @mouseup="handleMouseUp"
+      @mousemove="drag" @mouseover="handlemouseover" @dblclick="handleDoubleClick" @mouseleave="handleMouseLeave"
+      @click="handleClick" @contextmenu.prevent="handleRightClick" :style=cursorStyle>
       <svg style="max-width:66%;max-height:66%;">
         <use xlink:href="#iconThemeEditor"></use>
       </svg>
@@ -24,6 +22,8 @@ import CircleButtonGroupAutoCompute from './common/CircleButtonGroupCanvas.vue';
 import RadialSliderCanvas from './common/RadialSliderCanvas.vue';
 import _chroma from '../../../static/chroma-js.js';
 import eventBus from 'eventBus';
+import {计算zindex} from '../utils/zindex.js'
+
 const chroma = _chroma.default
 let keys = Object.keys(chroma.brewer);
 let groupSize = Math.ceil(keys.length / 12);
@@ -34,12 +34,15 @@ export default {
   },
   data() {
     return {
-      currentColor:'',
-      currentBackground:"",
-      currentBackgroundColor:"",
+      isMounted:false,
+      currentColor: '',
+      currentBackground: "",
+      currentBackgroundColor: "",
       lastRightClickTime: 0,
       isDoubleClick: false,
       doubleClickTimeout: null,
+      mouseoverTimeout: null,
+      mouseLeaved: true,
       currentColorScale: 'OrRd',
       showToolsMenu: false,
       showMenu: false,
@@ -67,7 +70,7 @@ export default {
               let gradient = chroma.scale(item).mode('lch').colors(5);
               // 将渐变转换为 CSS 渐变
               let cssGradient = `linear-gradient(${gradient[0]}, ${gradient[1]}, ${gradient[2]}, ${gradient[3]}, ${gradient[4]})`;              // 发出事件
-              this.currentBackground=cssGradient
+              this.currentBackground = cssGradient
               eventBus.emit('css-props-change', { background: cssGradient });
             },
             fillRadialGradientColorStops: [0, colors[0], 0.25, colors[1], 0.5, colors[2], 0.75, colors[3], 1, colors[4]],
@@ -83,8 +86,18 @@ export default {
       dragTimeout: null,
     }
   },
+  mounted(){
+    this.isMounted=true
+  },
   computed: {
-    cursorStyle(){
+    zindex(){
+      if(!this.isMounted){
+        return 4
+      }
+      this.$el.parentElement.style.zIndex=计算zindex('.layout__resize')
+      return this.$el.parentElement.style.zIndex
+    },
+    cursorStyle() {
       return `position:fixed;
       left:${this.position.x - 25}px;
       top:${this.position.y - 25}px;
@@ -95,7 +108,6 @@ export default {
     buttons() {
       return Array.from({ length: 12 }, (_, groupIndex) => {
         // 创建一个颜色比例尺
-        console.log(this.currentColorScale)
         let colorScale = chroma.scale(this.currentColorScale).colors(12);
         let groupSize = 12
         return Array.from({ length: groupSize }, (_, buttonIndex) => {
@@ -108,61 +120,91 @@ export default {
           return {
             label: ``,
             color: color,
-            click: (event) => { 
-              if(event.evt.button === 0){  
-          
-              this.currentColor=color
+            click: (event) => {
+              if (event.evt.button === 0) {
 
-              eventBus.emit('css-props-change', { color }) ;
+                this.currentColor = color
+
+                eventBus.emit('css-props-change', { color });
               }
             },
-            contextmenu: (event) => { 
-               event.evt.preventDefault();
-               this.currentBackground=""
- 
-               this.currentBackgroundColor=color
-               eventBus.emit('css-props-change', { backgroundColor: color }) 
-              }
+            contextmenu: (event) => {
+              event.evt.preventDefault();
+              this.currentBackground = ""
+
+              this.currentBackgroundColor = color
+              eventBus.emit('css-props-change', { backgroundColor: color })
+            }
           };
         });
       })
     },
   },
   methods: {
-    handleClick(){
-      eventBus.emit('css-props-change', { backgroundColor: this.$refs.cursor.style.backgroundColor }) 
-      eventBus.emit('css-props-change', { background: this.$refs.cursor.style.background }) 
-      eventBus.emit('css-props-change', { color: this.$refs.cursor.style.color }) 
+    handlemouseover(e) {
+      this.mouseLeaved = false;
 
+      if(e.target===this.$refs.cursor){
+        e.stopPropagation()
+
+        return
+      }
+     /* if (this.mouseLeaved === false) {
+
+        return
+      }*/
+      this.mouseoverTimeout =this.mouseoverTimeout||  setTimeout(() => {
+        if(!this.mouseLeaved){
+              this.showMenu = true;
+        }
+        clearTimeout(this.mouseoverTimeout);
+        this.mouseoverTimeout=null
+      }, 500);
+    },
+
+    handleMouseLeave(e) {
+      // 检查 mouseleave 事件的相关目标
+      const related = e.relatedTarget;
+      // 如果相关目标是元素本身或其子元素，那么不隐藏菜单
+      if (this.$el!==e.currentTarget) {
+        return;
+      }
+      clearTimeout(this.mouseoverTimeout);
+      this.mouseoverTimeout = null
+      this.mouseLeaved = true;
+      this.showMenu = false;
+      this.showToolsMenu = false
+    },
+    handleClick() {
+      eventBus.emit('css-props-change', { backgroundColor: this.$refs.cursor.style.backgroundColor })
+      eventBus.emit('css-props-change', { background: this.$refs.cursor.style.background })
+      eventBus.emit('css-props-change', { color: this.$refs.cursor.style.color })
     },
     handleRightClick() {
-    const now = Date.now();
-    const timeDiff = now - this.lastRightClickTime;
-    this.lastRightClickTime = now;
-
-    if (timeDiff < 500) { // 500ms 内的连续右键点击会被认为是右键双击
-      this.isDoubleClick = true;
-      console.log('Right double click!');
-      // 如果已经存在一个定时器，先清除它
-      if (this.doubleClickTimeout) {
-        clearTimeout(this.doubleClickTimeout);
-      }
-      // 设置一个新的定时器，在500ms后重置 isDoubleClick 状态
-      this.doubleClickTimeout = setTimeout(() => {
+      const now = Date.now();
+      const timeDiff = now - this.lastRightClickTime;
+      this.lastRightClickTime = now;
+      if (timeDiff < 500) { // 500ms 内的连续右键点击会被认为是右键双击
+        this.isDoubleClick = true;
+        // 如果已经存在一个定时器，先清除它
+        if (this.doubleClickTimeout) {
+          clearTimeout(this.doubleClickTimeout);
+        }
+        // 设置一个新的定时器，在500ms后重置 isDoubleClick 状态
+        this.doubleClickTimeout = setTimeout(() => {
+          this.isDoubleClick = false;
+        }, 500);
+      } else {
         this.isDoubleClick = false;
-      }, 500);
-    } else {
-      this.isDoubleClick = false;
-    }
+      }
+      // 如果不是双击事件，执行单击事件的逻辑
+      if (!this.isDoubleClick) {
+        this.showToolsMenu = !this.showToolsMenu;
+      }
+    },
 
-    // 如果不是双击事件，执行单击事件的逻辑
-    if (!this.isDoubleClick) {
-      this.showToolsMenu = !this.showToolsMenu;
-    }
-  },
-
-    handleDoubleClick(){
-      eventBus.emit('dialog-open-backgroundEditor',{});
+    handleDoubleClick() {
+      eventBus.emit('dialog-open-backgroundEditor', {});
     },
     handleMouseDown(event) {
       if (event.target.closest('.floating-ball')) {
@@ -202,9 +244,9 @@ export default {
 
     },
     dragEnd() {
-      this.dragging = false;
       window.removeEventListener('mousemove', this.drag)
       window.removeEventListener('selectstart', this.preventSelect);
+      setTimeout(() => { this.dragging = false; }, 200)
     },
     preventSelect(event) {
       event.preventDefault();
@@ -217,7 +259,6 @@ export default {
 .floating-ball {
   position: fixed;
   cursor: move;
-  z-index: 300;
   pointer-events: auto;
 }
 
@@ -225,7 +266,6 @@ export default {
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
   ;
   pointer-events: auto;
-  z-index: 700;
   pointer-events: auto;
   width: 50px;
   height: 50px;
@@ -233,12 +273,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
   border: 1px solid var(--b3-theme-secondary)
 }
 
 #floating-ball-root {
-  z-index: 300;
   pointer-events: auto;
 }
 </style>

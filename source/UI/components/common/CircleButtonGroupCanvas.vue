@@ -1,19 +1,20 @@
 <template>
   <div :style="`
             pointer-events:auto;
-            z-index:500;
+            z-index:${zindex};
             border-radius:50%;
             overflow:hidden;clip-path: circle(50% at 50% 50%);
             position:fixed;
-                      left:${(position && position.x) || 0 - 500}px;
+            left:${(position && position.x) || 0 - 500}px;
             top:${(position && position.y) || 0 - 500}px;
                       `
   ">
-    <div ref="container" style="pointer-events:auto;z-index:500;border-radius:50%;overflow:hidden"> </div>
+    <div ref="container" :style="`pointer-events:auto;border-radius:50%;overflow:hidden`"> </div>
   </div>
 </template>
 <script>
 import _Konva from '../../../../static/konva.js'
+import {计算zindex} from '../../utils/zindex.js'
 const Konva = _Konva.default
 import { 计算单个扇形路径, 计算圆弧路径, 计算圆形路径 } from '../../utils/svgProcessor.js';
 import { 等分计算单环扇形中心点集, 计算二维向量角度 } from '../../utils/geometryProcessor.js';
@@ -272,7 +273,6 @@ export default {
         const increment = (this.outerRadius - this.innerRadius) / this.maxGroupSize; // 你可以根据需要调整这个值
         innerRadius = (groupIndex - 1) * increment + this.innerRadius;
         outerRadius = groupIndex * increment + this.innerRadius;
-        console.log(outerRadius, this.outerRadius)
         return { innerRadius, outerRadius };
       }
     },
@@ -310,6 +310,9 @@ export default {
     },
   },
   computed: {
+    zindex(){
+      return 计算zindex('.layout__resize')
+    },
     buttonsWithCenter() {
       let innerRadius = 0;
       let outerRadius = this.innerRadius;

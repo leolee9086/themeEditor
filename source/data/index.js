@@ -185,10 +185,6 @@ export const 初始化插件数据=async()=>{
     }
     return result;
   }
-
-
-
-
 export async function 获取配置文件内容(配置文件路径) {
     // console.log(配置文件路径);
     let array = objectToArray(await 读取json配置(配置文件路径));
@@ -235,9 +231,6 @@ export async function 获取配置文件内容(配置文件路径) {
       return cssToJson(cssContent);
     }
   }
-
-
-
   function cssToJson(cssText) {
     let array = [];
     let styleEl = document.createElement("style");
