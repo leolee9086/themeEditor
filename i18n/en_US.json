@@ -20,5 +20,6 @@
   "基础":"Basic",
   "选择器过滤":"Selector filtering",
   "块背景样式-实验性,右边那个垃圾桶可以清理掉块的背景":"Block background style - experimental, the trash can on the right can clear the block background",
-  "块文字样式":"Block text style"
+  "块文字样式":"Block text style",
+  "字体系列":"font-family"
 }

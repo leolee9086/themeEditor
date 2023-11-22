@@ -1,7 +1,6 @@
 <template>
   <div :style="`
             pointer-events:auto;
-            z-index:${zindex};
             border-radius:50%;
             overflow:hidden;clip-path: circle(50% at 50% 50%);
             position:fixed;
@@ -14,7 +13,6 @@
 </template>
 <script>
 import _Konva from '../../../../static/konva.js'
-import {计算zindex} from '../../utils/zindex.js'
 const Konva = _Konva.default
 import { 计算单个扇形路径, 计算圆弧路径, 计算圆形路径 } from '../../utils/svgProcessor.js';
 import { 等分计算单环扇形中心点集, 计算二维向量角度 } from '../../utils/geometryProcessor.js';
@@ -310,9 +308,7 @@ export default {
     },
   },
   computed: {
-    zindex(){
-      return 计算zindex('.layout__resize')
-    },
+ 
     buttonsWithCenter() {
       let innerRadius = 0;
       let outerRadius = this.innerRadius;
