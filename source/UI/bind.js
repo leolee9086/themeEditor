@@ -41,7 +41,6 @@ export async function 绑定主题配置选择() {
     plugin.lastValues.lastThemeConfigFilePath = path.join(
       "conf",
       获取当前主题文件夹URL(),
-      plugin.lastValues.lastThemeConfigFilePath
     );
     await 保存();
     await plugin.初始化();

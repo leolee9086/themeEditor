@@ -77,23 +77,28 @@ export  class FormIpputer {
             style: "box-sizing: border-box",
             type: "range",
           });
-          element.querySelector("input").max= options.max || 100,
-          element.querySelector("input").min= options.min || 1,
-          element.querySelector("input").step=options.step||1,
-  
+          element.querySelector("input").max= options.max || 100;
+          element.querySelector("input").min= options.min || 1;
+          element.querySelector("input").step=options.step||1;
+          let unit =options.unit 
+          if(!unit){
+            unit='px'
+          }else if(unit==='none'){
+            unit=''
+          }
+
           element.querySelector("input").addEventListener("mousemove", () => {
             element.setAttribute(
               "aria-label",
-              element.querySelector("input").value+ (options.unit || "px")
+              element.querySelector("input").value+unit
             );
             options.value =
-            element.querySelector("input").value + (options.unit || "px");
+            element.querySelector("input").value +unit
   
             this.formItem.cb.bind(this.formItem)(options);
           });
           element.querySelector("input").addEventListener("change", () => {
-            options.value =
-              element.querySelector("input").value + (options.unit || "px");
+            options.value =element.querySelector("input").value + unit
             this.formItem.cb.bind(this.formItem)(options);
           });
           break;

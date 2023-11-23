@@ -29,13 +29,16 @@ async function 生成主题设置条目(){
     return;
   }
   let 当前主题配置内容 = await 获取配置文件内容(
-    plugin.lastValues.lastThemeConfigFilePath
+    plugin.lastValues.lastThemeConfigFilePath+'/'+plugin.lastValues.lastThemeConfigFileName
   );
   if (!当前主题配置内容) {
     return;
   }
+  console.log(plugin.当前主题配置内容,plugin.lastValues.lastThemeConfigFilePath)
+
   合并主题配置(当前主题配置内容, "theme");
   plugin.当前主题配置内容 = 当前主题配置内容;
+  console.log(plugin.当前主题配置内容)
   生成设置条目(plugin.当前主题配置内容, "theme");
 }
 async function 生成通用设置条目() {

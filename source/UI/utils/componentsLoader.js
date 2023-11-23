@@ -85,15 +85,12 @@ export const initVueApp = (appURL, name, mixinOptions = {}, directory, data) => 
         const fs = require('fs');
         const path = require('path');
         let previousContents = {};
-
         function watchDirectory(directory) {
             fs.readdirSync(directory).forEach(file => {
                 let filePath = path.join(directory, file);
                 let stats = fs.statSync(filePath);
-
                 if (stats.isFile()) {
                     previousContents[filePath] = fs.readFileSync(filePath, 'utf-8');
-
                     fs.watchFile(filePath, (curr, prev) => {
                         let currentContent = fs.readFileSync(filePath, 'utf-8');
                         if (currentContent !== previousContents[filePath]) {
@@ -108,10 +105,7 @@ export const initVueApp = (appURL, name, mixinOptions = {}, directory, data) => 
                 }
             });
         }
-
         directory&& watchDirectory(directory);
-
-
     }
     return oldApp
 }
