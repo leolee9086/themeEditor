@@ -35,9 +35,14 @@ export async function 绑定主题配置选择() {
   } else {
     selector.innerHTML += `<option value='-1'>当前主题没有提供配置文件</option>`;
   }
+  try{
+  selector.value = 主题配置文件数组.findIndex(item=>{return item===plugin.lastValues.lastThemeConfigFileName})
+  }catch(e){
+    console.error(e)
+    selector.value=0
+  }
   selector.onchange = async () => {
-    plugin.lastValues.lastThemeConfigFileName =
-      主题配置文件数组[selector.value];
+    plugin.lastValues.lastThemeConfigFileName =主题配置文件数组[selector.value];
     plugin.lastValues.lastThemeConfigFilePath = path.join(
       "conf",
       获取当前主题文件夹URL(),

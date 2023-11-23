@@ -155,7 +155,12 @@ class themeEditor extends Plugin {
       主题配置序号 = this.lastValues.lastThemeConfigFile;
     }
     let 主题配置文件数组 = await this.获取当前主题配置文件数组();
+    if(this.lastValues.lastThemeConfigFileName){
+      return 获取当前主题文件夹URL() + "/" + this.lastValues.lastThemeConfigFileName;
+
+    }else{
     return 获取当前主题文件夹URL() + "/" + 主题配置文件数组[主题配置序号];
+    }
   }
   async 获取当前公共配置文件数组() {
     let 公共配置文件夹内容 = await 思源工作空间.readDir(
