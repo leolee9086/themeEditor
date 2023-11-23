@@ -17,7 +17,7 @@ export function 计算css(配置内容, 设置类型) {
     let 导入列表 = [];
     let css = "";
     配置内容.forEach((item) => {
-      if (!item.filted && 真实过滤) {
+      if (!item.filted && plugin.lastValues.真实过滤) {
         return;
       }
       if (item.subtype == "@import") {

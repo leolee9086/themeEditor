@@ -165,10 +165,10 @@ export function 绑定公共配置上传() {
 }
 export function 绑定真实过滤开关() {
   let 开关 = plugin.dock面板元素.querySelector('[data-target="真实过滤"]');
-  开关.checked = 真实过滤;
+  开关.checked = plugin.lastValues.真实过滤;
   开关.onchange = () => {
     //console.log(开关.checked);
-    真实过滤 = 开关.checked ? true : false;
+    plugin.lastValues.真实过滤 = 开关.checked ? true : false;
 
     生成css();
   };
