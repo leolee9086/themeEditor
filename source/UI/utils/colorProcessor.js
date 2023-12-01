@@ -20,7 +20,7 @@ export const  isColorDark=(color)=> {
     return luma < 128;
 }
 export const 打开颜色选择器=(目标元素,options={})=>{
-    let {onchange,onsave}=options
+    let {onchange,onsave,onshow}=options
     if(pickrInstance){
         pickrInstance.destroyAndRemove();
         pickrInstance=undefined
@@ -29,7 +29,7 @@ export const 打开颜色选择器=(目标元素,options={})=>{
         pickrInstance = Pickr.create({
             el: 目标元素,
             theme: 'classic',
-            default: '#42445a',
+            default:options.default|| '#42445a',
             useAsButton: true,
             inline: false,    
             swatches: [
@@ -71,6 +71,11 @@ export const 打开颜色选择器=(目标元素,options={})=>{
         pickrInstance.on('change', (color, instance) => {
             onchange&&onchange(color, instance)
         });
+        pickrInstance.on('show', (color, instance) => {
+            onshow&&onshow(color, instance)
+        });
     }
     pickrInstance.show();
+    return pickrInstance
+
 }

@@ -1,13 +1,13 @@
 <template>
     <div>
-      <select v-model="keywordX" @change="updatePosition">
+      <select class="b3-select fn__flex-center" v-model="keywordX" @change="updatePosition">
         <option value="">Custom</option>
         <option value="left">Left</option>
         <option value="center">Center</option>
         <option value="right">Right</option>
       </select>
       <CssSizeInputter v-if="!keywordX" v-model="positionX" @input="updatePosition" />
-      <select v-model="keywordY" @change="updatePosition">
+      <select class="b3-select fn__flex-center" v-model="keywordY" @change="updatePosition">
         <option value="">Custom</option>
         <option value="top">Top</option>
         <option value="center">Center</option>

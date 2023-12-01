@@ -205,6 +205,7 @@ export default {
 
     handleDoubleClick() {
       eventBus.emit('dialog-open-backgroundEditor', {});
+      eventBus.emit('dialog-open-gradientEditor',{})
     },
     handleMouseDown(event) {
       if (event.target.closest('.floating-ball')) {

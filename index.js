@@ -36,6 +36,7 @@ class themeEditor extends Plugin {
     this.groups = [];
     this.subGroups = [];
     this.selectors = [];
+    
     this.创建配置Dock容器();
     this.注册图标()
   }

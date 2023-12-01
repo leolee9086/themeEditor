@@ -3,6 +3,8 @@ import { 保存 } from "../utils/files.js";
 import './stylesWatcher.js'
 import { openStyleDialog as openTextStyle } from "../UI/textStlyleEditor.js";
 import { openStyleDialog as openBackgroundStyle } from "../UI/backgroundStyleEditor.js";
+import { openStyleDialog as openGradientEditor } from "../UI/gradientEditor.js";
+
 import { hasClosestBlock } from "../utils/DOMFinder.js";
 const { eventBus } = plugin
 function camelToKebab(string) {
@@ -99,13 +101,13 @@ eventBus.on('dialog-open-backgroundEditor', (e) => {
     openBackgroundStyle()
 })
 
-
-document.addEventListener(
-    "mouseup",()=>{
-        const blockElements = document.querySelectorAll('.protyle-wysiwyg--select')
-        if(blockElements[0]){
-        plugin.blockElements= blockElements
-        openTextStyle()
-        }
-    }
-)
+eventBus.on('dialog-open-gradientEditor', (e) => {
+    openGradientEditor()
+})
+eventBus.on('dialog-open-openTextStyleEditor', (e) => {
+    openTextStyle()
+})
+eventBus.on('save-gradient',(e)=>{
+    console.log(e)
+    plugin.收藏的css渐变.push(e.detail)
+})

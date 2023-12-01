@@ -43,11 +43,23 @@ export const 计算起点和终点 = (中心点, 渐变线长度, 渐变角度) 
 }
 
 // 计算元素渐变线
-export const 计算元素渐变线 = (元素, 渐变角度) => {
+export const 计算元素渐变线 = (元素, 渐变角度, isRadial = false) => {
     let 渐变框边界 = 获取元素边界(元素);
     let 渐变线长度 = 计算渐变线长度(渐变框边界, 渐变角度);
     let 中心点 = 计算中心点(渐变框边界);
-    let {start, end} = 计算起点和终点(中心点, 渐变线长度, 渐变角度);
+    let { start, end } = 计算起点和终点(中心点, 渐变线长度, 渐变角度);
+
+    if (isRadial) {
+        // 对于环形渐变，起点和终点都是中心点，长度是元素的对角线的一半
+        start = 中心点;
+        渐变线长度 = Math.sqrt(Math.pow(渐变框边界.width, 2) + Math.pow(渐变框边界.height, 2)) / 2;
+        // 计算对焦点作为终点
+        end = {
+            x: 中心点.x + 渐变框边界.width / 2,
+            y: 中心点.y + 渐变框边界.height / 2
+        };
+    }
+
     return {
         length: 渐变线长度,
         center: 中心点,
@@ -55,7 +67,7 @@ export const 计算元素渐变线 = (元素, 渐变角度) => {
         end: end
     };
 }
-export const 计算事件在线上的最近点=(event,线定义)=>{
+export const 计算事件在线上的最近点 = (event, 线定义) => {
     let x = event.clientX, y = event.clientY
-    return 相对线计算点的垂点({x,y},线定义)
+    return 相对线计算点的垂点({ x, y }, 线定义)
 }

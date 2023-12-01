@@ -37,3 +37,6 @@
     background-color: transparent;
     pointer-events: none;
 }
+.fn__size3em{
+    width:3em
+}

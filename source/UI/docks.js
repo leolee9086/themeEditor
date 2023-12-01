@@ -23,7 +23,6 @@ export async function 创建配置面板() {
   await 生成主题设置条目();
   await 生成通用设置条目();
 }
-
 async function 生成主题设置条目(){
   if (!plugin.lastValues.lastThemeConfigFilePath) {
     return;
@@ -35,7 +34,6 @@ async function 生成主题设置条目(){
     return;
   }
   console.log(plugin.当前主题配置内容,plugin.lastValues.lastThemeConfigFilePath)
-
   合并主题配置(当前主题配置内容, "theme");
   plugin.当前主题配置内容 = 当前主题配置内容;
   console.log(plugin.当前主题配置内容)

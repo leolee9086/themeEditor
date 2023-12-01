@@ -33,7 +33,7 @@ plugin.eventBus.on('click-blockicon', (e) => {
         {
             label: "打开字体编辑",
             click: () => {
-                plugin.打开文字样式编辑对话框()
+                plugin.eventBus.emit('dialog-open-openTextStyleEditor',{})
             }
         },
     )
@@ -50,4 +50,18 @@ plugin.eventBus.on('click-blockicon', (e) => {
             submenu: pasteFontMenu()
         },
     )
+    detail.menu.addItem({
+        label: '应用渐变',
+        submenu:plugin.收藏的css渐变.map(
+            style=>{
+                return {
+                    label:`<span style="background-image:${style.css};max-width:400px !important;display:block">${style.name||style.id}</span>`,
+                    click: async () => {
+                        plugin.eventBus.emit('css-props-change',{backgroundImage:style.css})
+                    },
+                }
+            }
+        )
+    })
+
 })
