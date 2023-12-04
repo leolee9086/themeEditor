@@ -1,19 +1,38 @@
-import { plugin,kernelApi } from "../asyncModules.js";
+import { plugin, kernelApi } from "../asyncModules.js";
 import { 保存 } from "../utils/files.js";
 import './stylesWatcher.js'
 import { openStyleDialog as openTextStyle } from "../UI/textStlyleEditor.js";
 import { openStyleDialog as openBackgroundStyle } from "../UI/backgroundStyleEditor.js";
 import { openStyleDialog as openGradientEditor } from "../UI/gradientEditor.js";
-
+import { isColorDark } from "../UI/utils/colorProcessor.js";
 import { hasClosestBlock } from "../utils/DOMFinder.js";
 const { eventBus } = plugin
 function camelToKebab(string) {
     return string.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 }
-eventBus.on('save-all',保存)
+Object.defineProperty(plugin, 'blockElements', {
+    get: function () {
+        try {
+            // 获取所有 '.protyle-wysiwyg--select' 元素
+            let elements = Array.from(document.querySelectorAll('.protyle-wysiwyg--select'));
+            // 如果没有 '.protyle-wysiwyg--select' 元素，那么获取当前光标所在的、满足 hasClosestBlock 条件的元素
+            if (elements.length === 0) {
+                let activeElement = document.activeElement;
+                if (hasClosestBlock(activeElement)) {
+                    elements.push(activeElement);
+                }
+            }
+            return elements;
+        } catch (e) {
+            console.warn(e)
+            return []
+        }
+    }
+});
+eventBus.on('save-all', 保存)
 eventBus.on('css-props-change', (e) => {
     const data = e.detail;
-    plugin.blockElements&& plugin.blockElements.forEach(element => {
+    plugin.blockElements && plugin.blockElements.forEach(element => {
         for (let prop in data) {
             if (data.hasOwnProperty(prop)) {
                 let kebabProp = camelToKebab(prop);
@@ -24,8 +43,8 @@ eventBus.on('css-props-change', (e) => {
                 let newStyle = (element.getAttribute('style') || "").replace(/\"/g, "'");
                 element.setAttribute('style', newStyle);
                 kernelApi.setBlockAttrs({
-                    id:element.getAttribute("data-node-id"),
-                    attrs:{style:element.getAttribute("style")}
+                    id: element.getAttribute("data-node-id"),
+                    attrs: { style: element.getAttribute("style") }
                 })
             }
         }
@@ -34,7 +53,7 @@ eventBus.on('css-props-change', (e) => {
 
 eventBus.on('css-backgroundImage-add', (e) => {
     const data = e.detail;
-    plugin.blockElements&&plugin.blockElements.forEach(element => {
+    plugin.blockElements && plugin.blockElements.forEach(element => {
         for (let prop in data) {
             if (data.hasOwnProperty(prop)) {
                 // 替换双引号为单引号
@@ -42,8 +61,8 @@ eventBus.on('css-backgroundImage-add', (e) => {
                 let newStyle = (element.getAttribute('style') || "") + `;background-image:${value}`
                 element.setAttribute('style', newStyle);
                 kernelApi.setBlockAttrs({
-                    id:element.getAttribute("data-node-id"),
-                    attrs:{style:element.getAttribute("style")}
+                    id: element.getAttribute("data-node-id"),
+                    attrs: { style: element.getAttribute("style") }
                 })
 
             }
@@ -52,51 +71,42 @@ eventBus.on('css-backgroundImage-add', (e) => {
 })
 eventBus.on('clear-style', (e) => {
     const data = e.detail;
-    if(data.props==='all'){
-        plugin.blockElements&& plugin.blockElements.forEach(element => {
-            element.setAttribute('style',"")
+    if (data.props === 'all') {
+        plugin.blockElements && plugin.blockElements.forEach(element => {
+            element.setAttribute('style', "")
             kernelApi.setBlockAttrs({
-                id:element.getAttribute("data-node-id"),
-                attrs:{style:element.getAttribute("style")}
+                id: element.getAttribute("data-node-id"),
+                attrs: { style: element.getAttribute("style") }
             })
 
         });
-    
+
     }
-    if(data.props==='background'){
-        plugin.blockElements&&plugin.blockElements.forEach(element => {
+    if (data.props === 'background') {
+        plugin.blockElements && plugin.blockElements.forEach(element => {
             element.style.background = "";
             kernelApi.setBlockAttrs({
-                id:element.getAttribute("data-node-id"),
-                attrs:{style:element.getAttribute("style")}
+                id: element.getAttribute("data-node-id"),
+                attrs: { style: element.getAttribute("style") }
             })
 
         });
     }
-    if(data.props==='font'){
-        plugin.blockElements&&plugin.blockElements.forEach(element => {
+    if (data.props === 'font') {
+        plugin.blockElements && plugin.blockElements.forEach(element => {
             element.style.font = "";
             element.style.color = "";
             element.style.letterSpacing = "";
             element.style.textDecoration = "";
-                kernelApi.setBlockAttrs({
-                id:element.getAttribute("data-node-id"),
-                attrs:{style:element.getAttribute("style")}
+            kernelApi.setBlockAttrs({
+                id: element.getAttribute("data-node-id"),
+                attrs: { style: element.getAttribute("style") }
             })
 
         });
     }
 })
-eventBus.on('click-editorcontent', (e) => {
-    const event = e.detail.event;
-    if(hasClosestBlock(event.srcElement)){
-        if(!(document.querySelectorAll('.protyle-wysiwyg--select')[0])){
-            let id =hasClosestBlock(event.srcElement).getAttribute('data-node-id')
-            plugin.blockElements= []
-            plugin.blockElements=plugin.blockElements.concat(Array.from(document.querySelectorAll(`.protyle-wysiwyg [data-node-id="${id}"]`)))
-        }
-    }
-})
+
 eventBus.on('dialog-open-backgroundEditor', (e) => {
     openBackgroundStyle()
 })
@@ -107,7 +117,7 @@ eventBus.on('dialog-open-gradientEditor', (e) => {
 eventBus.on('dialog-open-openTextStyleEditor', (e) => {
     openTextStyle()
 })
-eventBus.on('save-gradient',(e)=>{
+eventBus.on('save-gradient', (e) => {
     console.log(e)
     plugin.收藏的css渐变.push(e.detail)
 })

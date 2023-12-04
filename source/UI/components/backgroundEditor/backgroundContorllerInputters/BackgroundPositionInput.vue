@@ -19,7 +19,7 @@
   
   <script>
   import { nextTick } from 'vue';
-  import CssSizeInputter from '../common/CssSizeInputter.vue';
+  import CssSizeInputter from '../../common/CssSizeInputter.vue';
   
   export default {
     components: { CssSizeInputter },

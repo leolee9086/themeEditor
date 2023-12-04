@@ -12,7 +12,6 @@
     <div class="fn__flex fn__flex-column" v-if="selectedType === 'multi'">
       <input  type="text" v-model="background.background" placeholder="css">
     </div>
-
   </div>
 </template>
   

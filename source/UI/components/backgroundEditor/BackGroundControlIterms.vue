@@ -10,18 +10,17 @@
           title="Enter the image URL">
         <select class="b3-select fn__flex-center" v-if="background.type === 'gradient'" v-model="background.image">
           <option v-for="gradient in gradients" :value="gradient.css">
-            {{ gradient.name||gradient.id }}
+            {{ gradient.name || gradient.id }}
           </option>
         </select>
-        <BackgroundPositionInput v-if="background.type !== 'color' && background.position" v-model="background.position" />
+        <BackgroundPositionInput v-if="background.type !== 'color' && background.position"
+          v-model="background.position" />
         <input v-if="background.type !== 'color'" type="text" v-model="background.size" placeholder="Size"
           title="Enter the size value">
       </div>
       <div class="fn__flex fn__flex-column">
-        <input v-if="background.type !== 'color'" type="text" v-model="background.repeatX" placeholder="Repeat X"
-          title="Enter the X repeat value">
-        <input v-if="background.type !== 'color'" type="text" v-model="background.repeatY" placeholder="Repeat Y"
-          title="Enter the Y repeat value">
+        <backgroundRepeat v-if="background&&background.type !== 'color'" v-model="background.repeat">
+        </backgroundRepeat>
         <select class="b3-select fn__flex-center" v-if="background.type !== 'color'" v-model="background.attachment">
           <option value="scroll">Scroll</option>
           <option value="fixed">Fixed</option>
@@ -43,9 +42,10 @@
   </div>
 </template>
 <script setup>
-import { watch, ref,reactive } from 'vue';
-import BackgroundPositionInput from './BackgroundPositionInput.vue';
+import { watch, ref, reactive } from 'vue';
+import BackgroundPositionInput from './backgroundContorllerInputters/BackgroundPositionInput.vue';
 import { plugin } from "runtime"
+import backgroundRepeat from './backgroundContorllerInputters/repeat.vue'
 const gradients = reactive(plugin.收藏的css渐变);
 const props = defineProps(['background', 'index', 'backgrounds']);
 
