@@ -36,11 +36,9 @@ class themeEditor extends Plugin {
     this.groups = [];
     this.subGroups = [];
     this.selectors = [];
-    
     this.创建配置Dock容器();
     this.注册图标()
   }
-
   async 初始化异步状态(){
     this.收藏样式映射表 = await this.loadData('styles')
     this.收藏的css渐变 = (await this.loadData('gradients'))||[
@@ -136,7 +134,6 @@ class themeEditor extends Plugin {
     await import(_path + '/init.js');
     await (await import(_path + '/UI/docks.js')).init();
   }
-
   async 初始化后端接口() {
     console.log(this)
     path = (await import(this.selfURL + "/source/polyfills/path.js"))["default"];
@@ -188,7 +185,6 @@ class themeEditor extends Plugin {
     this.当前主题配置文件数组 = 主题配置文件数组 || [];
     return this.当前主题配置文件数组;
   }
-
   获取标记字符串(action) {
     if (action == "addThemeProducts") {
       let 标记字符串 = btoa(
