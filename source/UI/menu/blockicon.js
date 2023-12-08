@@ -4,7 +4,6 @@ import { pasteFontMenu } from './clipBoard/paste.js'
 import { cssNames } from "../utils/cssproperties.js";
 plugin.eventBus.on('click-blockicon', (e) => {
     const { detail } = e
-    plugin.blockElements = detail.blockElements
     if (Array.from(plugin.blockElements).length === 1) {
         detail.menu.addItem(
             {
