@@ -7,6 +7,9 @@ import { openStyleDialog as openGradientEditor } from "../UI/gradientEditor.js";
 import { isColorDark } from "../UI/utils/colorProcessor.js";
 import { hasClosestBlock } from "../utils/DOMFinder.js";
 import chroma from '../../static/chroma-js.js'
+import Konva from '../../static/konva.js'
+import ColorThief from '../../static/color-thief.js';
+import { copyAsPng, getDOMColor } from '../utils/DOM2Image.js'
 const { eventBus } = plugin
 function camelToKebab(string) {
     return string.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
@@ -31,33 +34,50 @@ Object.defineProperty(plugin, 'blockElements', {
     }
 });
 eventBus.on('save-all', 保存)
-eventBus.on('css-props-change', (e) => {
+eventBus.on('css-props-change', async (e) => {
     const data = e.detail;
-    plugin.blockElements && plugin.blockElements.forEach(element => {
+    let _bgColor
+    // plugin.blockElements && plugin.blockElements.forEach(async element => {
+    for (let element of plugin.blockElements) {
+
         for (let prop in data) {
-            if (data.hasOwnProperty(prop)) {
+            if (data.hasOwnProperty(prop) && prop !== '$$autoColor') {
                 let kebabProp = camelToKebab(prop);
                 // 替换双引号为单引号
                 let value = data[prop].replace(/\"/g, "'");
                 element.style.setProperty(kebabProp, value);
                 if (prop === 'backgroundColor') {
-                        let bgColor = value;
-                        if (!bgColor) {
-                            // 如果没有指定颜色，计算出同色系但反差足够的颜色
-                            bgColor = chroma.random().hex();
-                        }
-                        let contrastColor = chroma(bgColor).luminance() < 0.5 ? chroma(bgColor).brighten().brighten().hex() : chroma(bgColor).darken().darken().hex();
-                        element.style.color = contrastColor;
+                    let bgColor = value;
+                    if (!bgColor) {
+                        // 如果没有指定颜色，计算出同色系但反差足够的颜色
+                        bgColor = chroma.random().hex();
+                    }
+                    let contrastColor = chroma(bgColor).luminance() < 0.5 ? chroma(bgColor).brighten().brighten().hex() : chroma(bgColor).darken().darken().hex();
+                    element.style.color = contrastColor;
+                }
+                if (data['$$autoColor'] && (prop === 'backgroundImage' || prop === 'background')) {
+                    _bgColor = _bgColor || await getDOMColor(element)
+                    console.log(_bgColor)
+                    let contrastColor = chroma(_bgColor).luminance() < 0.5 ? chroma(_bgColor).brighten().brighten().hex() : chroma(_bgColor).darken().darken().hex();
+                    element.style.color = contrastColor;
+                    await kernelApi.setBlockAttrs({
+                        id: element.getAttribute("data-node-id"),
+                        attrs: { style: element.getAttribute("style") }
+                    })
+
+
+                    continue
                 }
                 let newStyle = (element.getAttribute('style') || "").replace(/\"/g, "'");
                 element.setAttribute('style', newStyle);
-                kernelApi.setBlockAttrs({
+                await kernelApi.setBlockAttrs({
                     id: element.getAttribute("data-node-id"),
                     attrs: { style: element.getAttribute("style") }
                 })
             }
         }
-    });
+    }
+    // });
 })
 
 eventBus.on('css-backgroundImage-add', (e) => {
