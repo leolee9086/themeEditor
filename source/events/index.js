@@ -4,12 +4,10 @@ import './stylesWatcher.js'
 import { openStyleDialog as openTextStyle } from "../UI/textStlyleEditor.js";
 import { openStyleDialog as openBackgroundStyle } from "../UI/backgroundStyleEditor.js";
 import { openStyleDialog as openGradientEditor } from "../UI/gradientEditor.js";
-import { isColorDark } from "../UI/utils/colorProcessor.js";
 import { hasClosestBlock } from "../utils/DOMFinder.js";
 import chroma from '../../static/chroma-js.js'
-import Konva from '../../static/konva.js'
-import ColorThief from '../../static/color-thief.js';
-import { copyAsPng, getDOMColor } from '../utils/DOM2Image.js'
+import {  getDOMColor } from '../utils/DOM2Image.js'
+import * as events from "./eventTypes.js";
 const { eventBus } = plugin
 function camelToKebab(string) {
     return string.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
@@ -33,8 +31,8 @@ Object.defineProperty(plugin, 'blockElements', {
         }
     }
 });
-eventBus.on('save-all', 保存)
-eventBus.on('css-props-change', async (e) => {
+eventBus.on(events.saveAll, 保存)
+eventBus.on(events.cssPropsChange, async (e) => {
     const data = e.detail;
     let _bgColor
     // plugin.blockElements && plugin.blockElements.forEach(async element => {
@@ -80,7 +78,7 @@ eventBus.on('css-props-change', async (e) => {
     // });
 })
 
-eventBus.on('css-backgroundImage-add', (e) => {
+eventBus.on(events.cssBackgroungImageAdd, (e) => {
     const data = e.detail;
     plugin.blockElements && plugin.blockElements.forEach(element => {
         for (let prop in data) {
@@ -98,7 +96,7 @@ eventBus.on('css-backgroundImage-add', (e) => {
         }
     });
 })
-eventBus.on('clear-style', (e) => {
+eventBus.on(events.clearStyle, (e) => {
     const data = e.detail;
     if (data.props === 'all') {
         plugin.blockElements && plugin.blockElements.forEach(element => {
@@ -136,17 +134,16 @@ eventBus.on('clear-style', (e) => {
     }
 })
 
-eventBus.on('dialog-open-backgroundEditor', (e) => {
+eventBus.on(events.dialogOpenBackGroundEditor, (e) => {
     openBackgroundStyle()
 })
 
-eventBus.on('dialog-open-gradientEditor', (e) => {
+eventBus.on(events.dialogOpenGradientEditor, (e) => {
     openGradientEditor()
 })
-eventBus.on('dialog-open-openTextStyleEditor', (e) => {
+eventBus.on(events.dialogOpenTextStyleEditor, (e) => {
     openTextStyle()
 })
 eventBus.on('save-gradient', (e) => {
-    console.log(e)
     plugin.收藏的css渐变.push(e.detail)
 })
