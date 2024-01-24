@@ -3,7 +3,6 @@ const {i18n}=plugin
 const dock面板元素内容=`
 <div class="block__icons">
   <div class="block__logo">
-<<<<<<< HEAD
       <svg class="block__logoicon"><use xlink:href="#iconThemeEditor"></use></svg>
       themeEditor
   </div>
@@ -18,22 +17,6 @@ const dock面板元素内容=`
   <span data-type="min" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="Min ${clientApi.adaptHotkey(
     "⌘W"
   )}"><svg class="block__logoicon"><use xlink:href="#iconMin"></use></svg></span>
-=======
-      <svg><use xlink:href="#iconThemeEditor"></use></svg>
-      themeEditor
-  </div>
-  <span class="fn__flex-1 fn__space  b3-tooltips b3-tooltips__sw hidder" style="min-height:30px" aria-label="${i18n["单击显示/隐藏详细设置"]}"></span>
-  <span data-type="trash" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="${i18n["重新开始设置"]}"><svg><use xlink:href="#iconClose"></use></svg></span>
-
-  <span data-type="clear" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="${i18n.清除当前设置}"><svg><use xlink:href="#iconTrashcan"></use></svg></span>
-  <span data-type="refresh" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="${i18n.重载当前设置}"><svg><use xlink:href="#iconRefresh"></use></svg></span>
-
-  <span data-type="save" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="${i18n.保存当前设置}"><svg><use xlink:href="#iconThemeEditorSave"></use></svg></span>
-
-  <span data-type="min" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="Min ${clientApi.adaptHotkey(
-    "⌘W"
-  )}"><svg><use xlink:href="#iconMin"></use></svg></span>
->>>>>>> 05700748ea3e2f97b064b461739d859468f61489
 </div>
 <div class="block__icons hiddenable" style="max-height:42px;overflow:hidden">
 ${i18n.主题配置文件}:
@@ -42,11 +25,7 @@ ${i18n.主题配置文件}:
   data-custom-action="addThemeProducts"
   style='border-radius:3px'
   >
-<<<<<<< HEAD
   <svg class="block__logoicon"><use xlink:href="#iconCode"></use></svg>
-=======
-  <svg><use xlink:href="#iconCode"></use></svg>
->>>>>>> 05700748ea3e2f97b064b461739d859468f61489
 
   </span>
 
@@ -60,17 +39,10 @@ ${i18n.主题配置文件}:
   <option value=0>临时</option>
   </select>
   <span class="block__logo" data-custom-action="upLoadThemeProducts">
-<<<<<<< HEAD
 <svg class="block__logoicon"><use xlink:href="#iconAdd"></use></svg>
 </span>
 <span class="block__logo cc_download" data-custom-action="downloadThemeProducts">
 <svg class="block__logoicon"><use xlink:href="#iconDownload"></use></svg>
-=======
-<svg><use xlink:href="#iconAdd"></use></svg>
-</span>
-<span class="block__logo cc_download" data-custom-action="downloadThemeProducts">
-<svg><use xlink:href="#iconDownload"></use></svg>
->>>>>>> 05700748ea3e2f97b064b461739d859468f61489
 
 </span>
 </span>
@@ -84,11 +56,7 @@ data-custom-action="addCommonProducts"
 style='border-radius:3px'
 
 >
-<<<<<<< HEAD
 <svg class="block__logoicon"><use xlink:href="#iconCode"></use></svg>
-=======
-<svg><use xlink:href="#iconCode"></use></svg>
->>>>>>> 05700748ea3e2f97b064b461739d859468f61489
 
 </span>
 <select class="b3-select fn__flex-center fn__size100 configFileCommon">
