@@ -31,6 +31,7 @@ Object.defineProperty(plugin, 'blockElements', {
         }
     }
 });
+
 eventBus.on(events.saveAll, 保存)
 eventBus.on(events.cssPropsChange, async (e) => {
     const data = e.detail;

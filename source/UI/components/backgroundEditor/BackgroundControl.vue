@@ -8,9 +8,13 @@
       </template>
     </BackgroundPreviewSmall>
     <div class="cc-toolbar__divider"></div>
-    <BackGroundControlIterms :background="background"></BackGroundControlIterms>
+    <BackGroundControlIterms 
+    :background="background"
+    @imagePathChange="($event)=>background.image =$event"
+    ></BackGroundControlIterms>
     <div class="fn__flex fn__flex-column" v-if="selectedType === 'multi'">
       <input  type="text" v-model="background.background" placeholder="css">
+
     </div>
   </div>
 </template>

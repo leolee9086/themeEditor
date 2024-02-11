@@ -1,5 +1,5 @@
 <template>
-  <div class="preview" :style="backgroundStyle"></div>
+  <div class="preview" ref="preview" :style="backgroundStyle"></div>
 </template>
   
 <script>
@@ -17,7 +17,6 @@ export default {
   computed: {
     backgroundStyle() {
       let that = this
-      console.log(this.backgrounds)
       let background = this.backgrounds.map((bg) => { return bg && that.generateBackgroundValue(bg) }).filter(bg => { return bg }).join(', ')
       return {
         background
@@ -27,6 +26,7 @@ export default {
   watch: {
     backgroundStyle(newVal, oldVal) {
       if (newVal !== oldVal) {
+        this.$refs.preview.setAttribute('data-backgrounds-json',JSON.stringify(newVal.background))
         this.$emit('backgroundChanged', newVal.background);
       }
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="fn__flex-column fn__flex-1">
-    <BackgroundPreview :backgrounds="backgrounds" @backgroundChanged="handleBackgroundChanged" />
+    <BackgroundPreview ref="previewer" :backgrounds="backgrounds" @backgroundChanged="handleBackgroundChanged" />
     <div class="cc-toolbar__divider__vertical"></div>
     <div class="background-editor">
       <BackgroundList :backgrounds="backgrounds" />
@@ -17,12 +17,12 @@ import { parseBackgroundLayer } from '../utils/styleFromBlocks.js'
 import eventBus from 'eventBus'
 let css = `
 background: url("assets/色轮1 1-20230929013032-3v30qw6.png") center center / cover no-repeat, linear-gradient(red, red), linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet) center center / cover no-repeat, url("https://image.pollinations.ai/prompt/Abstract%20Pattern%202") center center / cover no-repeat, linear-gradient(rgba(0, 255, 0, 0.2), rgba(0, 255, 0, 0.2)), url("https://image.pollinations.ai/prompt/Abstract%20Pattern%203") center center / cover no-repeat, linear-gradient(rgba(0, 0, 255, 0.2), rgba(0, 0, 255, 0.2)), url("https://image.pollinations.ai/prompt/Abstract%20Pattern%204") center center / cover no-repeat, linear-gradient(rgba(255, 255, 0, 0.2), rgba(255, 255, 0, 0.2)), url("https://image.pollinations.ai/prompt/Abstract%20Pattern%205") center center / cover no-repeat;  `;
-console.log(parseBackgroundLayer(css))
 export default {
   components: {
     BackgroundPreview,
     BackgroundList
   },
+  //这里之前是用了一个占位的背景样式代替的,之后写完编辑器要写好初始化
   data() {
     return {
       
@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     handleBackgroundChanged(background) {
-      console.log(background)
+      //不是元素,不能直接setAttribute
       eventBus.emit('css-props-change', { background: background })
     }
   }

@@ -57,11 +57,38 @@ style="pointer-events:auto;z-index:5;max-height:80vh">
         <svg><use xlink:href="#iconTrashcan"></use></svg>
     </span>
     <span class="fn__space"></span>
+    <span data-type="save-background-json" class="block__icon block__icon--show b3-tooltips b3-tooltips__sw" aria-label="清除样式">
+    <svg><use xlink:href="#iconThemeEditorSave"></use></svg>
+</span>
 </span>
     
     `)
     dialog.element.querySelector('[data-type="clear-style"]').addEventListener('click', () => {
         plugin.eventBus.emit('clear-style', { props: 'background' })
+    })
+    dialog.element.querySelector('[data-type="save-background-json"]').addEventListener('click',()=>{
+        let dialog  = new clientApi.Dialog(
+            {
+                title: "输入背景样式名,留空取消",
+                content: `<div class="fn__flex"><input class="fn__flex-1 b3-text-field  b3-filter" placeholder="输文件名,其实安全上下文内那个+号可以右键上传"></div>`,
+                width: "400px",
+                height: "96px",
+                destroyCallback: async () => {
+                    let name = Dialog.element.querySelector("input").value;
+                    if (name) {
+                        plugin.eventBus.emit('save-background-json',
+                            {
+                                id: Lute.NewNodeID(),
+                                name: name,
+                                json: dialog.element.querySelector('.preview').getAttribute('data-backgrounds-json')
+                            }
+                        )
+
+                    }
+                },
+    
+            }
+        )
     })
 
     let container = dialog.element.querySelector(".b3-dialog__container");
@@ -97,5 +124,3 @@ document.body.insertAdjacentElement('beforeend', floatingBallContainer);
 // 然后我们可以将Vue应用挂载到这个新的元素上
 const app = initVueApp('/plugins/themeEditor/source/UI/components/floatingball-color.vue', 'aaa', { plugin: plugin }, Constants.devPath, {});
 app.mount('#floating-ball-container');
-
-

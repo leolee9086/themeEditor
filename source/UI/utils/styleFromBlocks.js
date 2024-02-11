@@ -243,18 +243,18 @@ export function parseBackgroundLayer(css) {
     }
     return {
         type: normalizedStyle.background.image.$raw.startsWith('url') ? 'image' : 'gradient',
-        image: normalizedStyle.background.image.$raw,
-        position: normalizedStyle.background.position.$raw,
-        positionX: normalizedStyle.background.position.x.$raw,
-        positionY: normalizedStyle.background.position.y.$raw,
-        size: normalizedStyle.background.size.$raw,
-        repeat: normalizedStyle.background.repeat.$raw,
-        repeatX: normalizedStyle.background.repeat.x.$raw,
-        repeatY: normalizedStyle.background.repeat.y.$raw,
-        attachment: normalizedStyle.background.attachment.$raw,
-        origin: normalizedStyle.background.origin.$raw,
-        clip: normalizedStyle.background.clip.$raw,
-        $raw: normalizedStyle.background.$raw,
+        image: normalizedStyle.background.image?.$raw,
+        position: normalizedStyle.background.position?.$raw,
+        positionX: normalizedStyle.background.position.x?.$raw,
+        positionY: normalizedStyle.background.position.y?.$raw,
+        size: normalizedStyle.background.size?.$raw,
+        repeat: normalizedStyle.background.repeat?.$raw,
+        repeatX: normalizedStyle.background.repeat.x?.$raw,
+        repeatY: normalizedStyle.background.repeat.y?.$raw,
+        attachment: normalizedStyle.background.attachment?.$raw,
+        origin: normalizedStyle.background.origin?.$raw,
+        clip: normalizedStyle.background.clip?.$raw,
+        $raw: normalizedStyle.background?.$raw,
         layers: pasredLayers
     };
 }

@@ -35,7 +35,6 @@
     },
     methods:{
       渐变按钮点击回调(e){
-        console.log(e.target)
         eventBus.emit('css-props-change',{
           backgroundImage:e.target.style.backgroundImage
         })
