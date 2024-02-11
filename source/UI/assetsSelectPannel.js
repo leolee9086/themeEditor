@@ -27,7 +27,7 @@ export const selectAssets = async () => {
         for  (let assetInfo of assets) {
             if (assetInfo.path) {
                 cardsHTML = cardsHTML + `
-        <div data-href="${assetInfo.path}" style="height:148px;width:148px">
+        <div data-href="${assetInfo.path}" class="background-image-item" style="height:148px;width:148px">
             <img src="/${assetInfo.path}"></img>
         </div>
         `

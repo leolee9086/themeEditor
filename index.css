@@ -40,3 +40,6 @@
 .fn__size3em{
     width:3em
 }
+.background-image-item:hover{
+    box-shadow:var(--b3-dialog-shadow)
+}
