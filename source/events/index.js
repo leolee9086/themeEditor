@@ -8,6 +8,8 @@ import { hasClosestBlock } from "../utils/DOMFinder.js";
 import chroma from '../../static/chroma-js.js'
 import {  getDOMColor } from '../utils/DOM2Image.js'
 import * as events from "./eventTypes.js";
+import { startWatchProtyle } from "./protyleWatcher.js";
+startWatchProtyle()
 const { eventBus } = plugin
 function camelToKebab(string) {
     return string.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
@@ -147,4 +149,30 @@ eventBus.on(events.dialogOpenTextStyleEditor, (e) => {
 })
 eventBus.on('save-gradient', (e) => {
     plugin.收藏的css渐变.push(e.detail)
+})
+eventBus.on('current-block-theme-change',(e)=>{
+    const themeName=e.detail
+    let attrs ={}
+    attrs['custom-theme']=themeName
+    if(plugin.currentBlockIDs){
+        plugin.currentBlockIDs.forEach(
+            id=>{
+                kernelApi.setBlockAttrs.sync(
+                    {
+                        id,
+                        attrs
+                    }
+                )
+            }
+        )
+    }else if(plugin.currentProtyleBlockID){
+        console.log(plugin.currentProtyleBlockID)
+        kernelApi.setBlockAttrs.sync(
+            {
+                id:plugin.currentProtyleBlockID,
+                attrs
+            }
+        )
+
+    }
 })

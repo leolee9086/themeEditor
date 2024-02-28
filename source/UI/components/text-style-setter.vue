@@ -49,7 +49,6 @@ function updateLineHeight(value) {
 }
 function update(data) {
     eventBus.emit('css-props-change', data)
-
 }
 </script>
 <style>
