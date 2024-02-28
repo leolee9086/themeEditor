@@ -7,7 +7,6 @@ export const 初始化设置css=()=>{
         "beforeend",
         `
         <style id="themeEditorStyle-theme" class="themeEditorStyle" data-provider="theme"></style>
-  
       <style id="themeEditorStyle-common" class="themeEditorStyle" data-provider="common"></style>
       `
       );

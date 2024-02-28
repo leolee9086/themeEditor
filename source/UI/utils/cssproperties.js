@@ -1,5 +1,6 @@
 const cssproperties = [{
     "name": "背景样式", "props": [
+        { "value": "background", "label": "背景", "type": "string" },
         { "value": "background-color", "label": "背景颜色", "type": "color" },
         { "value": "background-image", "label": "背景图", "type": "image" },
         { "value": "background-position", "label": "相对位置", "type": "string", "optionx": ["top", "center", "bottom"], "optiony": ["center", "left", "right"] },

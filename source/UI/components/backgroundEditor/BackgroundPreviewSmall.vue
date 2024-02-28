@@ -1,4 +1,3 @@
-<!-- BackgroundPreview.vue -->
 <template>
   <div class="preview-small" @mouseover="show = true" @mouseleave="show = false"
     :style="{ background: generateBackgroundValue(background) }">
@@ -21,8 +20,6 @@ export default {
       let image = bg.image ? `${bg.image} ${bg.position || ""} / ${bg.size || ""} ${bg.repeat || ""}` : "";
       return [color, image].filter(Boolean).join(', ');
     }
-
-
   }
 }
 </script>

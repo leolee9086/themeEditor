@@ -106,7 +106,26 @@ class themeEditor extends Plugin {
         that.eventBus.emit('main-dock-ready')
         that.eventBus.emit('reload-dock')
       },
+      
     });
+    this.addDock({
+      config: {
+        icon: "iconThemeEditor",
+        position: "LeftBottom",
+        size: { width: 200, height: 0 },
+        title: "编辑器样式",
+      },
+      data: {
+        text: "",
+      },
+      type: "editor-style",
+      init() {
+        that.块样式dock面板元素 = this.element;
+        that.eventBus.emit('main-dock-ready')
+        that.eventBus.emit('reload-dock')
+      },
+    });
+    
   }
   async 初始化() {
     let that =this

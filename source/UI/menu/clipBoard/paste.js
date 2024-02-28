@@ -1,4 +1,6 @@
 import { plugin } from "../../../asyncModules.js";
+import { cssNames } from "../../utils/cssproperties.js";
+
 const fontStyles = [
     'font-size',
     'font-weight',
@@ -11,11 +13,11 @@ const fontStyles = [
 
 // 创建菜单项
 const menuItems = () => {
-    return fontStyles.filter((item) => {
+    return cssNames.filter((item) => {
         return plugin[`暂存的css样式`][item]
     }).map(style => {
         return {
-            label: `黏贴${style}(计算值)`,
+            label: `应用样式:${style}`,
             click: () => {
                 plugin.blockElements.forEach(
                     el => {

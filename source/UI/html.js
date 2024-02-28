@@ -4,7 +4,7 @@ const dock面板元素内容=`
 <div class="block__icons">
   <div class="block__logo">
       <svg class="block__logoicon"><use xlink:href="#iconThemeEditor"></use></svg>
-      themeEditor
+      界面设置
   </div>
   <span class="fn__flex-1 fn__space  b3-tooltips b3-tooltips__sw hidder" style="min-height:30px" aria-label="${i18n["单击显示/隐藏详细设置"]}"></span>
   <span data-type="trash" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="${i18n["重新开始设置"]}"><svg class="block__logoicon"><use xlink:href="#iconClose"></use></svg></span>

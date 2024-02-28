@@ -35,7 +35,7 @@ style="pointer-events:auto;z-index:5;max-height:80vh">
                     console.warn(e)
                 }
             },
-            width: '400px',
+            width: '800px',
             height: 'auto',
             transparent: true,
             disableClose: false,

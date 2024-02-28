@@ -2,28 +2,15 @@ import { plugin, clientApi } from "../asyncModules.js";
 import { 获取配置文件内容 ,合并主题配置} from "../data/index.js";
 import { FormItem } from "./formItem.js"; 
 import { testselector } from "../utils/cssHelper.js";
-import {
-  绑定dock事件
-} from "./bind.js"
 import dock面板元素内容 from './html.js'
 import { 生成css } from "../utils/cssBuilder.js";
-let Pickr
+import { 创建配置面板 } from "./mainDock/index.js";
+export let Pickr
 export const init = async () => {
   plugin.dock面板元素.innerHTML = dock面板元素内容
   await 创建配置面板()
 }
-export async function 创建配置面板() {
-  if (!Pickr) {
-    Pickr = (await import(plugin.selfURL + "/pickr-esm2022.js"))["default"];
-  }
-  plugin.Pickr = Pickr
-  plugin.dock面板元素.querySelector(".config__tab-container").innerHTML = "";
-  plugin.formItems = [];
-  await 绑定dock事件()
-  await 生成主题设置条目();
-  await 生成通用设置条目();
-}
-async function 生成主题设置条目(){
+export async function 生成主题设置条目(){
   if (!plugin.lastValues.lastThemeConfigFilePath) {
     return;
   }
@@ -39,7 +26,7 @@ async function 生成主题设置条目(){
   console.log(plugin.当前主题配置内容)
   生成设置条目(plugin.当前主题配置内容, "theme");
 }
-async function 生成通用设置条目() {
+export async function 生成通用设置条目() {
   let 当前通用配置内容 = await 获取配置文件内容(
     plugin.lastValues.lastCommonfigFilePath
   );
